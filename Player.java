@@ -26,8 +26,6 @@ public class Player extends Entity {
     {
     	image = new Image("res/playerft1.png");
     	
-		
-		// int[] time1= {300,300,300,300,300,300, };
 		int time1=100;
 		left = new Animation(leftA,time1,false);
 		right = new Animation(rightA,time1,false);
@@ -52,35 +50,37 @@ public class Player extends Entity {
     	intel = 8;
     	money = 0;
     }
-    public boolean meleeRange(Entity other, int space)
+    public boolean meleeAttack(Entity other, int space)
     {
     	Circle range = new Circle(x+32,y+32,32+(64*space));
     	Rectangle target = new Rectangle(other.x,other.y,other.image.getWidth(),other.image.getHeight());
     	if(range.intersects(target)||range.contains(target.getX(),target.getY()))
     		if(direction.equals("right")&&target.getX()+target.getWidth() > range.getCenterX())
+    			{
+    			System.out.println("Right true");
     			return true;
+    			}
     		else
     		{
     			if(direction.equals("left")&&target.getX()<range.getCenterX())
-    				return true;
+    			{System.out.println("Left true");
+    				return true;}
     			else
     			{
     				if(direction.equals("up")&&target.getY()+target.getHeight()>range.getCenterY())
-    					return true;
+    				{System.out.println("up true");
+    					return true;}
     				else
     				{
     				if(target.getY()<range.getCenterY())
-    					return true;
+    				{System.out.println("down true");
+    					return true;}
     				}
     			}
     		}
     	return false;
     }
-    public void Swing()
-    {
-    	System.out.println("You Swing");
-    	
-    }
+    
     public String toString()
     {
     	return (hp + "/" + maxhp + "health " + mp + "/" + maxmp + "Mana ");

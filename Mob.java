@@ -1,11 +1,14 @@
 package rpg;
 
+import java.util.ArrayList;
+import java.util.Timer;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.Rectangle;
 
 public abstract class Mob extends Entity {
-	
 	public int hp;
 	public int dmg;
     public int money;
@@ -18,9 +21,13 @@ public abstract class Mob extends Entity {
     public String direction;
     public Animation sprite, up, down, left, right;
     public boolean seePlayer;
-    int moveX;
-	int moveY;
-	
+    public int moveX;
+	public int moveY;
+	public boolean canShoot;
+	public int directionrnd;
+	public static boolean moveagain;
+	public Timer timer = new Timer();
+	public Timer subtimer = new Timer();
     
 	public Mob()
 	{
@@ -36,12 +43,21 @@ public abstract class Mob extends Entity {
 	public void die()
 	{
 		//TODO make mob die
-		
 	}
 	
-	public void ai(Player player) throws SlickException
+	public void ai(Player player, ArrayList<Projectile> projectiles) throws SlickException
 	{
 			
+	}
+	public boolean canSeePlayer(Player player, float range)
+	{
+		Circle radius = new Circle(x,y,range);
+		Rectangle theplayer = new Rectangle(player.x,player.y,player.image.getWidth(),player.image.getHeight());
+		if (radius.intersects(theplayer)||radius.contains(theplayer.getX(),theplayer.getY()))
+		{
+			return true;
+		}
+		else return false;
 	}
 
 }

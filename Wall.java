@@ -17,6 +17,14 @@ public class Wall extends Entity{
 		isSolid=true;
 		//if (myType.equals("water")) image = new Image("res/")
 	}
+	public Wall(float myx, float myy) throws SlickException
+	{
+		super();
+		x=myx;
+		y=myy;
+		image = new Image("res/block.png");
+		isSolid=true;
+	}
     public String toString()
     {
         String mysolid = "Not Solid";

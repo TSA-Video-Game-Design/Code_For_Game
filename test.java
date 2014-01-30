@@ -3,6 +3,7 @@ package rpg;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -15,12 +16,12 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
 
 public class test extends BasicGame{
-	
+	//TODO COLLISION, HP, ATTACKING, MELEE MOB AI;
 	Player player;
 	Wall wall;
 	boolean pasta;
 	TiledMap grassMap;
-	static ArrayList<Entity> worldlist = new ArrayList<Entity>();
+	ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	ArrayList<Wall> walls = new ArrayList<Wall>();
 	ArrayList<Mob> mobs = new ArrayList<Mob>();
 	int x,y;
@@ -38,12 +39,16 @@ public class test extends BasicGame{
 		{
 			moby.image.draw(moby.x,moby.y);
 		}
+		for (Projectile projecty:projectiles)
+		{
+			projecty.image.draw(projecty.x,projecty.y);
+		}
 	}
 
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
-		Music goodMusic = new Music("res/1. Intro.WAV");
-		goodMusic.loop();
+		//Music goodMusic = new Music("res/1. Intro.WAV");
+		//goodMusic.loop();
 		player = new Player();
 		x=0;
 		y=0;
@@ -62,24 +67,32 @@ public class test extends BasicGame{
              }
          }
 		mobs.add(new Sentry(1024,128));
+		mobs.add(new Laserbot(1024,256));
 	}
 
 	@Override
 	public void update(GameContainer container, int arg1) throws SlickException {
 		Input input = container.getInput();
 		pasta = true;
-		for(Entity thing:worldlist)
-		{
-			System.out.println();
-		}
 		if (player.direction.equals("down")) player.sprite = new Animation(new Image[]{new Image("res/playerft1.png")},1,false);
 		else if (player.direction.equals("up")) player.sprite = new Animation(new Image[]{new Image("res/playerbk1.png")},1,false);
 		else if (player.direction.equals("left")) player.sprite = new Animation(new Image[]{new Image("res/Left A1.png")},1,false);
 		else if (player.direction.equals("right")) player.sprite = new Animation(new Image[]{new Image("res/Right A1.png")},1,false);
+		
 		player.sprite.update(arg1);
+		//updates for list of stuff
 		for(Mob moby:mobs)
 		{
-			moby.ai(player);
+			moby.ai(player, projectiles);
+		}
+		for(int i=0;i<projectiles.size();i++)
+		{
+			projectiles.get(i).update(10);
+			if (projectiles.size()>1)
+			{
+				if (Math.sqrt((Math.pow(projectiles.get(i).startingX-projectiles.get(i).x,2)) + (Math.pow(projectiles.get(i).startingY-projectiles.get(i).y,2))) > 2048)
+					projectiles.remove(i);
+			}
 		}
 		if (input.isKeyDown(Input.KEY_A))
 		{
@@ -109,14 +122,30 @@ public class test extends BasicGame{
 			player.sprite = player.down;
 			player.sprite.update(arg1);
 		}
-		if (input.isKeyDown(Input.KEY_ESCAPE))
+		if (input.isKeyDown(Input.MOUSE_LEFT_BUTTON))
 		{
-			System.exit(0);
+			for (Mob moby: mobs)
+			{
+				if (player.meleeAttack(moby,1))
+				{
+					moby.hurt(2);
+				}
+			}
 		}
-		if (input.isMouseButtonDown(0))
+		if (input.isKeyDown(Input.KEY_X))
 		{
-			player.Swing();
-			
+			//Music DBZ = new Music("res/DBZ.wav");
+			//DBZ.play();
+			//player.sprite = new Animation(new Image[]{new Image("res/ss/supersaiyan1.png"),new Image("res/ss/supersaiyan2.png"),new Image("res/ss/supersaiyan3.png")},50,false);
+			Timer timer = new Timer("printer");
+			timer.schedule(new TimerTask()
+				{
+					public void run()
+					{
+						System.out.println(player.direction);
+					}
+				}, 5000
+			);
 		}
 	}
 	
@@ -158,7 +187,7 @@ public class test extends BasicGame{
 		}
 		if(pasta==true) 
 		{
-			//TODO array of monsters, & their starting points
+			//TODO Keep adding the things on the screen as we make more stuff
 			x+=x1;
 			y+=y1;
 			for (Wall wally:walls)
@@ -171,6 +200,11 @@ public class test extends BasicGame{
 				moby.x+=x1;
 				moby.y+=y1;
 			}
+			for (Projectile projecty: projectiles)
+			{
+				projecty.x+=x1;
+				projecty.y+=y1;
+			}
 		}
 		
 	}
@@ -178,26 +212,12 @@ public class test extends BasicGame{
 		int maxFPS = 60;
 		AppGameContainer app;
 		try {
-			app = new AppGameContainer(new test("Name of game Here"));
+			app = new AppGameContainer(new test("Game"));
 			app.setDisplayMode(1024,640,false);
 			app.setTargetFrameRate(maxFPS);
 			app.start();
 		} catch (SlickException e) {
 			e.printStackTrace();
-		}
-		
-	}
-	public void createProjectile()
-	{
-		
-	}
-	public class printerTask extends TimerTask
-	{
-
-		@Override
-		public void run() {
-			System.out.println("dickbutt");
-			
 		}
 		
 	}

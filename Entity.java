@@ -22,17 +22,15 @@ public abstract class Entity {
     public boolean isInside(Entity other)
     {	//Originally a failed collision method; this may or may not be useful.
     	boolean a;
-    	// check if between object's top and bottom
     	a=(other.y+other.image.getHeight()>=y && other.y <= y + image.getHeight());
-    	// check if between object's left and right sides
     	return( a && (other.x+other.image.getWidth()>=x && other.x <= x+image.getWidth()));
     }
     
     public void collision(Entity other)
     {	//other will be the player for player & world collisions
-    	// if other is between object's top & bottom
+    	
     	if(other.y < y+image.getHeight() && y < other.y+other.image.getHeight())
-    	{	//System.out.println("between y " + true);
+    	{// if player's top is above wall's bottom && wall's top is above player's bottom	
     		if(other.x==x+image.getWidth()) cannotMoveRight=true;
     		else cannotMoveRight=false;
     		if(other.x+other.image.getWidth() == x) cannotMoveLeft=true;
@@ -44,7 +42,7 @@ public abstract class Entity {
     		cannotMoveLeft=false;
     	}
     	if((other.x <= x+image.getWidth()) && (x<other.x+other.image.getWidth()))
-    	{	//System.out.println("between x " + true);
+    	{	
     		if(other.y==y+image.getHeight()) cannotMoveDown=true;
     		else cannotMoveDown=false;
     		if(other.y+other.image.getHeight()==y) cannotMoveUp=true;
@@ -55,5 +53,9 @@ public abstract class Entity {
     		cannotMoveUp=false;
     		cannotMoveDown=false;
     	}
+    }
+    public void collision(Entity other, boolean a)
+    {
+    	//if (y == other.y) || 
     }
 }

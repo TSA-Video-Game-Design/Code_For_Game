@@ -11,10 +11,12 @@ public class Projectile extends Entity {
 	{
 		x = myx;
 		y = myy;
+		startingX=myx;
+		startingY=myy;
 		i = myi;
 		j = myj;
 		magnitude = Math.sqrt(Math.pow(i,2) + Math.pow(j,2));
-		image = new Image("res/Pipe.png");
+		image = new Image("res/Bullet.png");
 		cannotMoveLeft=false;
 		cannotMoveRight=false;
 		cannotMoveUp= false;
@@ -25,7 +27,5 @@ public class Projectile extends Entity {
 	{
 		x = (float) (x + ((i/magnitude)*multiple));
 		y = (float) (y + ((j/magnitude)*multiple));
-		System.out.println(x+","+y);
-
 	}
 }

@@ -1,5 +1,6 @@
 package rpg;
 
+import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 
 public abstract class Entity {
@@ -14,6 +15,8 @@ public abstract class Entity {
     public boolean cannotMoveDown;
     public float startingX;
     public float startingY;
+    public String direction;
+    public Animation sprite, up, down, left, right, idle;
     public Entity()
     {
     	

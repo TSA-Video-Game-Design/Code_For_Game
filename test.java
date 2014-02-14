@@ -91,14 +91,14 @@ public class test extends BasicGame{
 		
 		player.sprite.update(arg1);
 		//updates for list of stuff
-		/*for(Mob moby:mobs)
+		for(Mob moby:mobs)
 		{
 			moby.ai(player, projectiles);
 			if (player.meleeRange(moby, 128))
 			{
 				moby.hurt(10);
 			}
-		}*/
+		}
 		for(int i=0;i<projectiles.size();i++)
 		{
 			projectiles.get(i).update(10);

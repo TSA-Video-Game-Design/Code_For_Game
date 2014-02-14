@@ -1,8 +1,10 @@
 package rpg;
 
+
+
 import java.util.ArrayList;
 import java.util.Timer;
-import org.newdawn.slick.Animation;
+
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Circle;
@@ -18,8 +20,6 @@ public abstract class Mob extends Entity {
 	public Image[] upA;
 	public Image[] downA;
 	public Image projectile;
-    public String direction;
-    public Animation sprite, up, down, left, right;
     public boolean seePlayer;
     public int moveX;
 	public int moveY;

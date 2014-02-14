@@ -19,6 +19,7 @@ public class test extends BasicGame{
 	//TODO COLLISION, HP, ATTACKING, MELEE MOB AI;
 	Player player;
 	Wall wall;
+	int timey;
 	boolean pasta;
 	TiledMap grassMap;
 	ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
@@ -33,8 +34,12 @@ public class test extends BasicGame{
 	public void render(GameContainer arg0, Graphics g) throws SlickException {
 		//order of render: backgrounds -> walls -> items -> player+mobs
 
-		grassMap.render(x, y);
+		grassMap.render(x, y,0);
 		player.sprite.draw(player.x,player.y);
+		for (int i = 1; i<2;i++)
+		{
+			grassMap.render(x, y, i);
+		}
 		for(Mob moby:mobs)
 		{
 			moby.image.draw(moby.x,moby.y);
@@ -52,20 +57,25 @@ public class test extends BasicGame{
 		player = new Player();
 		x=0;
 		y=0;
+		timey = 0;
 		pasta = false;
-		grassMap = new TiledMap("res/test1.tmx");
+		grassMap = new TiledMap("res/City Map.tmx");
+		for (int layer = 0;layer < 2;layer++)
+		{
 		for (int xAxis=0;xAxis<grassMap.getWidth(); xAxis++)
         {
              for (int yAxis=0;yAxis<grassMap.getHeight(); yAxis++)
              {
-                 int tileID = grassMap.getTileId(xAxis, yAxis, 0);
+                 int tileID = grassMap.getTileId(xAxis, yAxis,layer);
                  String value = grassMap.getTileProperty(tileID, "blocked", "false");
-                 if ("true".equals(value))
+                 if (value.equals("true"))
                  {
                      walls.add(new Wall(xAxis*32,yAxis*32,"grass"));
                  }
              }
          }
+		
+		}
 		mobs.add(new Sentry(1024,128));
 		mobs.add(new Laserbot(1024,256));
 	}
@@ -81,10 +91,14 @@ public class test extends BasicGame{
 		
 		player.sprite.update(arg1);
 		//updates for list of stuff
-		for(Mob moby:mobs)
+		/*for(Mob moby:mobs)
 		{
 			moby.ai(player, projectiles);
-		}
+			if (player.meleeRange(moby, 128))
+			{
+				moby.hurt(10);
+			}
+		}*/
 		for(int i=0;i<projectiles.size();i++)
 		{
 			projectiles.get(i).update(10);
@@ -96,47 +110,75 @@ public class test extends BasicGame{
 		}
 		if (input.isKeyDown(Input.KEY_A))
 		{
+			if (player.swinging==false)
+			{
 			player.direction="left";
 			collisionCheck(4,0,"right");
 			player.sprite = player.left;
 			player.sprite.update(arg1);
+			}
 		}
+		else
 		if (input.isKeyDown(Input.KEY_D))
 		{	//right
+			if(player.swinging==false)
+			{
 			player.direction="right";
 			collisionCheck(-4,0,"left");
 			player.sprite = player.right;
 			player.sprite.update(arg1);
+			}
 		}
+		else
 		if (input.isKeyDown(Input.KEY_W))
 		{	//up
+			if(player.swinging==false)
+			{
 			player.direction="up";
 			collisionCheck(0,4,"down");
 			player.sprite = player.up;
 			player.sprite.update(arg1);
+			}
 		}
+		else
 		if (input.isKeyDown(Input.KEY_S))
 		{	//down
+			if(player.swinging==false)
+			{
 			player.direction="down";
 			collisionCheck(0,-4,"up");
 			player.sprite = player.down;
 			player.sprite.update(arg1);
-		}
-		if (input.isKeyDown(Input.MOUSE_LEFT_BUTTON))
-		{
-			for (Mob moby: mobs)
-			{
-				if (player.meleeAttack(moby,1))
-				{
-					moby.hurt(2);
-				}
 			}
+		}
+		if (input.isKeyDown(Input.KEY_ESCAPE))
+		{
+			System.exit(0);
+		}
+		if (input.isMousePressed(0))
+		{
+			player.swinging = true;
+			timey=0;
+			
+		}
+		if (player.swinging==true)
+		{	
+				player.Swing(player.direction);
+				player.sprite.update(arg1);
+		}
+		if (timey>=15)
+		{
+			player.swinging=false;
+		}
+		else
+		{
+			timey+=1;
 		}
 		if (input.isKeyDown(Input.KEY_X))
 		{
-			//Music DBZ = new Music("res/DBZ.wav");
-			//DBZ.play();
-			//player.sprite = new Animation(new Image[]{new Image("res/ss/supersaiyan1.png"),new Image("res/ss/supersaiyan2.png"),new Image("res/ss/supersaiyan3.png")},50,false);
+			Music DBZ = new Music("res/DBZ.wav");
+			DBZ.play();
+			player.sprite = new Animation(new Image[]{new Image("res/ss/supersaiyan1.png"),new Image("res/ss/supersaiyan2.png"),new Image("res/ss/supersaiyan3.png")},50,false);
 			Timer timer = new Timer("printer");
 			timer.schedule(new TimerTask()
 				{

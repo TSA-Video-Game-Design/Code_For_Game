@@ -73,6 +73,8 @@ public class Player extends Entity {
     		hitbox = new Rectangle(object.x,object.y,object.sprite.getCurrentFrame().getWidth(),object.sprite.getCurrentFrame().getHeight());
     	else
     		hitbox = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    	//the hitbox is causing the robot to miss the character, so narrow the hitbox on the player and/or make the
+    	//enemy entities target area smaller width... if that makes any sense
     	boolean canHit =  ((reach.intersects(hitbox)) || (reach.contains(object.x,object.y)));
     	if(((direction.equals("up"))&&(object.y<y))&&canHit)
     	{

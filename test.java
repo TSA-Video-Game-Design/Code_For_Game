@@ -1,5 +1,6 @@
 package rpg;
 
+
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -13,6 +14,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.ShapeRenderer;
 import org.newdawn.slick.tiled.TiledMap;
 
 public class test extends BasicGame{
@@ -33,7 +35,6 @@ public class test extends BasicGame{
 	@Override
 	public void render(GameContainer arg0, Graphics g) throws SlickException {
 		//order of render: backgrounds -> walls -> items -> player+mobs
-
 		grassMap.render(x, y,0);
 		player.sprite.draw(player.x,player.y);
 		for (int i = 1; i<2;i++)
@@ -42,7 +43,10 @@ public class test extends BasicGame{
 		}
 		for(Mob moby:mobs)
 		{
-			moby.image.draw(moby.x,moby.y);
+			if (moby instanceof Sentry)
+				moby.sprite.draw(moby.x,moby.y);
+			else
+				moby.image.draw(moby.x,moby.y);
 		}
 		for (Projectile projecty:projectiles)
 		{
@@ -77,7 +81,6 @@ public class test extends BasicGame{
 		
 		}
 		mobs.add(new Sentry(1024,128));
-		mobs.add(new Laserbot(1024,256));
 	}
 
 	@Override
@@ -94,10 +97,6 @@ public class test extends BasicGame{
 		for(Mob moby:mobs)
 		{
 			moby.ai(player, projectiles);
-			if (player.meleeRange(moby, 128))
-			{
-				moby.hurt(10);
-			}
 		}
 		for(int i=0;i<projectiles.size();i++)
 		{
@@ -155,11 +154,22 @@ public class test extends BasicGame{
 		{
 			System.exit(0);
 		}
-		if (input.isMousePressed(0))
+		if (player.canHitAgain)
 		{
-			player.swinging = true;
-			timey=0;
+			if (input.isMousePressed(0))
+			{
+				player.canHitAgain=false;
+				player.swinging = true;
+				timey=0;
+				for (Mob moby:mobs)
+				{
+					if (player.meleeRange(moby, 128))
+					{
+						moby.hurt(10);
+					}
+				}
 			
+			}
 		}
 		if (player.swinging==true)
 		{	
@@ -168,6 +178,7 @@ public class test extends BasicGame{
 		}
 		if (timey>=15)
 		{
+			player.canHitAgain=true;
 			player.swinging=false;
 		}
 		else

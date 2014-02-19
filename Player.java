@@ -15,6 +15,7 @@ public class Player extends Entity {
     public int intel;
     public int money;
     public boolean swinging;
+    public boolean canHitAgain;
     public Image[] leftA = {new Image("res/Left A1.png"), new Image("res/Left A2.png"),new Image("res/Left A3.png"),new Image("res/Left A4.png"),new Image("res/Left B1.png"),new Image("res/Left B2.png"),new Image("res/Left B3.png"),new Image("res/Left B4.png")};
     public Image[] rightA = {new Image("res/Right A1.png"), new Image("res/Right A2.png"),new Image("res/Right A3.png"),new Image("res/Right A4.png"),new Image("res/Right B1.png"),new Image("res/Right B2.png"),new Image("res/Right B3.png"),new Image("res/Right B4.png")};
 	public Image[] upA = {new Image("res/playerbk1.png"), new Image("res/playerbk2.png"), new Image("res/playerbk3.png"), new Image("res/playerbk4.png"), new Image("res/playerbk5.png"), new Image("res/playerbk6.png")};
@@ -24,15 +25,15 @@ public class Player extends Entity {
     public Image[] stabDown = {new Image("res/F1.png"),new Image("res/F2.png")};
     public Image[] stabLeft = {new Image("res/L1.png"),new Image("res/L2.png")};
     public Image[] stabRight = {new Image("res/R1.png"),new Image("res/R2.png")};
-    
+    Rectangle hitbox;
+    Circle reach;
 	public String direction;
     public Animation sprite, up, down, left, right, idle,stabL,stabR,stabU,stabD;
     
     public Player() throws SlickException
     {
     	image = new Image("res/playerft1.png");
-    	
-		
+		canHitAgain = true;
 		//int[] time1= {300,300,300,300,300,300};
 		int time1=100;
 		int time2 = 300;
@@ -64,14 +65,32 @@ public class Player extends Entity {
     	money = 0;
     }
     public boolean meleeRange(Entity object, float range)
-	{
-		Circle radius = new Circle(x,y,range);
-		Rectangle theplayer = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
-		if (radius.intersects(theplayer)||radius.contains(theplayer.getX(),theplayer.getY()))
-		{
-			return true;
-		}
-		else return false;
+	{//return true if he can hit the enemy
+    	//Circle reach = new Circle(x,y,range);
+    	//Rectangle hitbox;
+    	reach = new Circle(x+32,y+32,range);
+    	if (object instanceof Sentry)
+    		hitbox = new Rectangle(object.x,object.y,object.sprite.getCurrentFrame().getWidth(),object.sprite.getCurrentFrame().getHeight());
+    	else
+    		hitbox = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    	boolean canHit =  ((reach.intersects(hitbox)) || (reach.contains(object.x,object.y)));
+    	if(((direction.equals("up"))&&(object.y<y))&&canHit)
+    	{
+    		return true;
+    	}
+    	if(((direction.equals("down"))&&(object.y>y))&&canHit)
+    	{
+    		return true;
+   		}
+   		if((((direction.equals("right"))&&(object.x>x)))&&canHit)
+   		{
+   			return true;
+   		}
+   		if(((direction.equals("left"))&&(object.x<x))&&canHit)
+   		{
+   			return true;    		
+   		}
+   		return false;
 	}
     public void Swing(String direction)
     { 

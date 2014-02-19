@@ -11,7 +11,7 @@ import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 
 public abstract class Mob extends Entity {
-	public int hp;
+	public double hp;
 	public int dmg;
     public int money;
     public Image image;
@@ -34,7 +34,7 @@ public abstract class Mob extends Entity {
 		
 	}
 	
-	public void hurt(int damage)
+	public void hurt(double damage)
 	{
 		hp -= damage;
 		if (hp<0) die();

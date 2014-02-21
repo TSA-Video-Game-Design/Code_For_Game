@@ -28,7 +28,10 @@ public abstract class Mob extends Entity {
 	public static boolean moveagain;
 	public Timer timer = new Timer();
 	public Timer subtimer = new Timer();
-    
+	public int knockbackX;
+	public int knockbackY;
+	public int knockbackTimer;
+	public boolean knockedBack;
 	public Mob()
 	{
 		
@@ -37,7 +40,6 @@ public abstract class Mob extends Entity {
 	public void hurt(double damage)
 	{
 		hp -= damage;
-		if (hp<0) die();
 	}
 	
 	public void die()

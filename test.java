@@ -18,7 +18,7 @@ import org.newdawn.slick.geom.ShapeRenderer;
 import org.newdawn.slick.tiled.TiledMap;
 
 public class test extends BasicGame{
-	//TODO COLLISION, HP, ATTACKING, MELEE MOB AI;
+	//TODO COLLISION, HP, ATTACKING, MELEE MOB AI, fix the hitboxes for character and enemies;
 	Player player;
 	Wall wall;
 	int timey;
@@ -28,29 +28,31 @@ public class test extends BasicGame{
 	ArrayList<Wall> walls = new ArrayList<Wall>();
 	ArrayList<Mob> mobs = new ArrayList<Mob>();
 	int x,y;
+	boolean titleScreen = false;
+	int level = 1;
 	public test(String title) {
 		super(title);
 	}
 
 	@Override
 	public void render(GameContainer arg0, Graphics g) throws SlickException {
-		//order of render: backgrounds -> walls -> items -> player+mobs
-		grassMap.render(x, y,0);
-		player.sprite.draw(player.x,player.y);
-		for (int i = 1; i<2;i++)
+		//order of render: backgrounds ->   walls -> items -> player+mobs
+		if(!titleScreen)
 		{
-			grassMap.render(x, y, i);
-		}
-		for(Mob moby:mobs)
-		{
-			if (moby instanceof Sentry)
+			grassMap.render(x, y,0);
+			player.sprite.draw(player.x,player.y);
+			for(Mob moby:mobs)
+			{
 				moby.sprite.draw(moby.x,moby.y);
-			else
-				moby.image.draw(moby.x,moby.y);
-		}
-		for (Projectile projecty:projectiles)
-		{
-			projecty.image.draw(projecty.x,projecty.y);
+			}
+			for (Projectile projecty:projectiles)
+			{
+				projecty.image.draw(projecty.x,projecty.y);
+			}
+			for (int i = 1; i<2;i++)
+			{
+				grassMap.render(x, y, i);
+			}
 		}
 	}
 
@@ -63,148 +65,158 @@ public class test extends BasicGame{
 		y=0;
 		timey = 0;
 		pasta = false;
-		grassMap = new TiledMap("res/City Map.tmx");
-		for (int layer = 0;layer < 2;layer++)
+		if(!titleScreen)
 		{
-		for (int xAxis=0;xAxis<grassMap.getWidth(); xAxis++)
-        {
-             for (int yAxis=0;yAxis<grassMap.getHeight(); yAxis++)
-             {
-                 int tileID = grassMap.getTileId(xAxis, yAxis,layer);
-                 String value = grassMap.getTileProperty(tileID, "blocked", "false");
-                 if (value.equals("true"))
-                 {
-                     walls.add(new Wall(xAxis*32,yAxis*32,"grass"));
-                 }
-             }
-         }
-		
+			grassMap = new TiledMap("res/City Map.tmx");
+			for (int layer = 0;layer < 2;layer++)
+			{
+				for (int xAxis=0;xAxis<grassMap.getWidth(); xAxis++)
+				{
+					for (int yAxis=0;yAxis<grassMap.getHeight(); yAxis++)
+					{
+						int tileID = grassMap.getTileId(xAxis, yAxis,layer);
+						String value = grassMap.getTileProperty(tileID, "blocked", "false");
+						if (value.equals("true"))
+						{
+							walls.add(new Wall(xAxis*32,yAxis*32,"grass"));
+						}
+					}
+				}
+
+			}
+			mobs.add(new Meleebot(1024,128));
+			mobs.add(new Sentry(1024, 196));
 		}
-		mobs.add(new Sentry(1024,128));
+
 	}
 
 	@Override
 	public void update(GameContainer container, int arg1) throws SlickException {
 		Input input = container.getInput();
-		pasta = true;
-		if (player.direction.equals("down")) player.sprite = new Animation(new Image[]{new Image("res/playerft1.png")},1,false);
-		else if (player.direction.equals("up")) player.sprite = new Animation(new Image[]{new Image("res/playerbk1.png")},1,false);
-		else if (player.direction.equals("left")) player.sprite = new Animation(new Image[]{new Image("res/Left A1.png")},1,false);
-		else if (player.direction.equals("right")) player.sprite = new Animation(new Image[]{new Image("res/Right A1.png")},1,false);
-		
-		player.sprite.update(arg1);
-		//updates for list of stuff
-		for(Mob moby:mobs)
+		if(!titleScreen)
 		{
-			moby.ai(player, projectiles);
-		}
-		for(int i=0;i<projectiles.size();i++)
-		{
-			projectiles.get(i).update(10);
-			if (projectiles.size()>1)
-			{
-				if (Math.sqrt((Math.pow(projectiles.get(i).startingX-projectiles.get(i).x,2)) + (Math.pow(projectiles.get(i).startingY-projectiles.get(i).y,2))) > 2048)
-					projectiles.remove(i);
-			}
-		}
-		if (input.isKeyDown(Input.KEY_A))
-		{
-			if (player.swinging==false)
-			{
-			player.direction="left";
-			collisionCheck(4,0,"right");
-			player.sprite = player.left;
+			pasta = true;
+			if (player.direction.equals("down")) player.sprite = new Animation(new Image[]{new Image("res/playerft1.png")},1,false);
+			else if (player.direction.equals("up")) player.sprite = new Animation(new Image[]{new Image("res/playerbk1.png")},1,false);
+			else if (player.direction.equals("left")) player.sprite = new Animation(new Image[]{new Image("res/Left A1.png")},1,false);
+			else if (player.direction.equals("right")) player.sprite = new Animation(new Image[]{new Image("res/Right A1.png")},1,false);
+	
 			player.sprite.update(arg1);
-			}
-		}
-		else
-		if (input.isKeyDown(Input.KEY_D))
-		{	//right
-			if(player.swinging==false)
+			//updates for list of stuff
+			for(int i=0;i<mobs.size();i++)
 			{
-			player.direction="right";
-			collisionCheck(-4,0,"left");
-			player.sprite = player.right;
-			player.sprite.update(arg1);
+				mobs.get(i).ai(player,projectiles);
+				if (mobs.get(i).hp<=0)
+					mobs.remove(i);
 			}
-		}
-		else
-		if (input.isKeyDown(Input.KEY_W))
-		{	//up
-			if(player.swinging==false)
+			for(int i=0;i<projectiles.size();i++)
 			{
-			player.direction="up";
-			collisionCheck(0,4,"down");
-			player.sprite = player.up;
-			player.sprite.update(arg1);
-			}
-		}
-		else
-		if (input.isKeyDown(Input.KEY_S))
-		{	//down
-			if(player.swinging==false)
-			{
-			player.direction="down";
-			collisionCheck(0,-4,"up");
-			player.sprite = player.down;
-			player.sprite.update(arg1);
-			}
-		}
-		if (input.isKeyDown(Input.KEY_ESCAPE))
-		{
-			System.exit(0);
-		}
-		if (player.canHitAgain)
-		{
-			if (input.isMousePressed(0))
-			{
-				player.canHitAgain=false;
-				player.swinging = true;
-				timey=0;
-				for (Mob moby:mobs)
+				projectiles.get(i).update(10);
+				if (projectiles.size()>1)
 				{
-					if (player.meleeRange(moby, 128))
+					if (Math.sqrt((Math.pow(projectiles.get(i).startingX-projectiles.get(i).x,2)) + (Math.pow(projectiles.get(i).startingY-projectiles.get(i).y,2))) > 2048)
+						projectiles.remove(i);
+				}
+			}
+			if (input.isKeyDown(Input.KEY_A))
+			{
+				if (player.swinging==false)
+				{
+					player.direction="left";
+					collisionCheck(4,0,"right");
+					player.sprite = player.left;
+					player.sprite.update(arg1);
+				}
+			}
+			else
+				if (input.isKeyDown(Input.KEY_D))
+				{	//right
+					if(player.swinging==false)
 					{
-						moby.hurt(10);
+						player.direction="right";
+						collisionCheck(-4,0,"left");
+						player.sprite = player.right;
+						player.sprite.update(arg1);
 					}
 				}
-			
+				else
+					if (input.isKeyDown(Input.KEY_W))
+					{	//up
+						if(player.swinging==false)
+						{
+							player.direction="up";
+							collisionCheck(0,4,"down");
+							player.sprite = player.up;
+							player.sprite.update(arg1);
+						}
+					}
+					else
+						if (input.isKeyDown(Input.KEY_S))
+						{	//down
+							if(player.swinging==false)
+							{
+								player.direction="down";
+								collisionCheck(0,-4,"up");
+								player.sprite = player.down;
+								player.sprite.update(arg1);
+							}
+						}
+			if (input.isKeyDown(Input.KEY_ESCAPE))
+			{
+				System.exit(0);
 			}
-		}
-		if (player.swinging==true)
-		{	
+			if (player.canHitAgain)
+			{
+				if (input.isMousePressed(0))
+				{
+					player.canHitAgain=false;
+					player.swinging = true;
+					timey=0;
+					for (Mob moby:mobs)
+					{
+						if (player.meleeRange(moby, 128))
+						{
+							moby.hurt(10);
+						}
+					}
+	
+				}
+			}
+			if (player.swinging==true)
+			{	
 				player.Swing(player.direction);
 				player.sprite.update(arg1);
-		}
-		if (timey>=15)
-		{
-			player.canHitAgain=true;
-			player.swinging=false;
-		}
-		else
-		{
-			timey+=1;
-		}
-		if (input.isKeyDown(Input.KEY_X))
-		{
-			Music DBZ = new Music("res/DBZ.wav");
-			DBZ.play();
-			player.sprite = new Animation(new Image[]{new Image("res/ss/supersaiyan1.png"),new Image("res/ss/supersaiyan2.png"),new Image("res/ss/supersaiyan3.png")},50,false);
-			Timer timer = new Timer("printer");
-			timer.schedule(new TimerTask()
+			}
+			if (timey>=15)
+			{
+				player.canHitAgain=true;
+				player.swinging=false;
+			}
+			else
+			{
+				timey+=1;
+			}
+			if (input.isKeyDown(Input.KEY_X))
+			{
+				Music DBZ = new Music("res/DBZ.wav");
+				DBZ.play();
+				player.sprite = new Animation(new Image[]{new Image("res/ss/supersaiyan1.png"),new Image("res/ss/supersaiyan2.png"),new Image("res/ss/supersaiyan3.png")},50,false);
+				Timer timer = new Timer("printer");
+				timer.schedule(new TimerTask()
 				{
 					public void run()
 					{
 						System.out.println(player.direction);
 					}
 				}, 5000
-			);
+						);
+			}
 		}
 	}
-	
+
 	public void collisionCheck(int x1, int y1,String direction) throws SlickException
 	{
-	
+
 		for (Wall wally: walls)
 		{
 			wally.collision(player);
@@ -228,8 +240,8 @@ public class test extends BasicGame{
 			{
 				cantMove.add(wally.cannotMoveDown==false);
 			}
-			
-			
+
+
 		}
 		for(boolean x : cantMove)
 		{
@@ -259,7 +271,7 @@ public class test extends BasicGame{
 				projecty.y+=y1;
 			}
 		}
-		
+
 	}
 	public static void main(String[] args){
 		int maxFPS = 60;
@@ -272,7 +284,7 @@ public class test extends BasicGame{
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 }

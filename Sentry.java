@@ -30,6 +30,10 @@ public class Sentry extends Mob {
 		directionrnd = 3;
 		//directionrnd isnt acutally random here. i just needed a direction variable as a int type
 		//Call stuff at diff frames in the animation class
+		knockbackX=0;
+		knockbackY=0;
+		knockbackTimer=0;
+		knockedBack=false;
 		Image[] upA = {new Image("res/Sentry Up Shoot 1.png"),new Image("res/Sentry Up Shoot 2.png")};
 		Image[] downA= {new Image("res/Sentry Down Shoot 1.png"),new Image("res/Sentry Down Shoot 2.png")};
 		Image[] leftA={new Image("res/Sentry Left Shoot 1.png"),new Image("res/Sentry Left Shoot 2.png")};

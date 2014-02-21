@@ -69,12 +69,10 @@ public class Player extends Entity {
     	//Circle reach = new Circle(x,y,range);
     	//Rectangle hitbox;
     	reach = new Circle(x+32,y+32,range);
-    	if (object instanceof Sentry)
-    		hitbox = new Rectangle(object.x,object.y,object.sprite.getCurrentFrame().getWidth(),object.sprite.getCurrentFrame().getHeight());
-    	else
-    		hitbox = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
-    	//the hitbox is causing the robot to miss the character, so narrow the hitbox on the player and/or make the
-    	//enemy entities target area smaller width... if that makes any sense
+    	//if (object instanceof Sentry)
+    	hitbox = new Rectangle(object.x,object.y,object.sprite.getCurrentFrame().getWidth(),object.sprite.getCurrentFrame().getHeight());
+    	//else
+    	//	hitbox = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
     	boolean canHit =  ((reach.intersects(hitbox)) || (reach.contains(object.x,object.y)));
     	if(((direction.equals("up"))&&(object.y<y))&&canHit)
     	{
@@ -94,6 +92,7 @@ public class Player extends Entity {
    		}
    		return false;
 	}
+ 
     public void Swing(String direction)
     { 
     	
@@ -115,6 +114,7 @@ public class Player extends Entity {
     	}
     	System.out.println("You Swing");
     }
+    
     public String toString()
     {
     	return (hp + "/" + maxhp + "health " + mp + "/" + maxmp + "Mana ");

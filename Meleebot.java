@@ -11,7 +11,7 @@ import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 
 public class Meleebot extends Mob {
-
+		int attackTimer;
 	public Meleebot(float myx, float myy) throws SlickException 
 	{
 		hp = 70;
@@ -35,10 +35,10 @@ public class Meleebot extends Mob {
 		directionrnd=1;
 		sprite = idle;
 		sprite.setCurrentFrame(1);
+		attackTimer=0;
 	}
 	public void ai(Player player, ArrayList<Projectile> projectiles)
 	{
-		System.out.println(hp);
 		float i = (player.x-x);
 		float j = (player.y-y);
 		double angle = Math.atan(j/i);
@@ -133,8 +133,16 @@ public class Meleebot extends Mob {
 					}
 				}
 			}
-			//attack
-			player.hp--;
+			if((sprite != idle)&&(sprite.getFrame()==2))
+			{
+				if(attackTimer==8)
+				{
+					player.hp--;
+					attackTimer=0;
+				}
+				else
+					attackTimer++;
+			}
 		}
 		else
 		{

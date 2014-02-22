@@ -52,11 +52,10 @@ public class Sentry extends Mob {
 	
 	public void ai( Player player, ArrayList<Projectile> projectiles) throws SlickException
 	{
-		System.out.println(hp);
 		if (canSeePlayer(player, 384))
 		{
 			seePlayer=true;
-			Rectangle[] ranges = {new Rectangle(x,y,224,image.getHeight()), new Rectangle(x-224,y,224,image.getHeight()), new Rectangle(x,y-224,image.getWidth(),224), new Rectangle(x,y,image.getWidth(),224)};
+			Rectangle[] ranges = {new Rectangle(x-224,y+20,224,40),new Rectangle(x+20,y-224,40,224),new Rectangle(x+80,y+20,224,40),new Rectangle(x+20,y+80,40,224)};
 			Rectangle theplayer = new Rectangle(player.x,player.y,player.image.getWidth(),player.image.getHeight());
 			for (Rectangle recky:ranges)
 			{
@@ -143,7 +142,7 @@ public class Sentry extends Mob {
 		{
 			seePlayer=true;
 			canShoot=false;
-			projectiles.add(new Projectile(x+32,y+24,player.x+32,player.y+32));
+			projectiles.add(new Projectile(x+32,y+24,player.x+32,player.y+32,false));
 			Timer waittime = new Timer();
 			waittime.schedule(new TimerTask()
 			{
@@ -154,6 +153,5 @@ public class Sentry extends Mob {
 			},2000);
 		}
 	}
-
 
 }

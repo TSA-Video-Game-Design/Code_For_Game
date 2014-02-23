@@ -3,6 +3,7 @@ package rpg;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 
@@ -33,14 +34,14 @@ public class Player extends Entity {
     public Image[] shootDown = {new Image("res/F1 (Laser Shot).png"),new Image("res/F2 (Laser Shot).png")};
     public Image[] shootLeft = {new Image("res/L1 (Laser Shot).png"),new Image("res/L2 (Laser Shot).png")};
     public Image[] shootRight = {new Image("res/R1 (Laser Shot).png"),new Image("res/R2 (Laser Shot).png")};
-    
+    public Sound hurtsfx;
 	public String direction;
     public Animation sprite, up, down, left, right, idle,stabL,stabR,stabU,stabD;
     
     public Player() throws SlickException
     {
     	image = new Image("res/playerft1.png");
-    	
+    	hurtsfx=new Sound("res/sound/Hit.wav");
 		
 		//int[] time1= {300,300,300,300,300,300};
 		int time1=100;
@@ -128,6 +129,7 @@ public class Player extends Entity {
     public void hurt()
     {
     	hp--;
+    	hurtsfx.play();
     }
     public String toString()
     {

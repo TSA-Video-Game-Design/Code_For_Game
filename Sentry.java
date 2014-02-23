@@ -8,12 +8,14 @@ import java.util.TimerTask;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 
 public class Sentry extends Mob {
 	boolean subSeePlayer=false;
 	Animation see;
+	Sound attacksfx;
 	public Sentry(float myx, float myy) throws SlickException 
 	{
 		hp = 60;
@@ -48,6 +50,7 @@ public class Sentry extends Mob {
 		see = new Animation(seeA,1000,false);
 		sprite = idle;
 		sprite.setCurrentFrame(3);
+		attacksfx = new Sound("res/sound/Laser.wav");
 	}
 	
 	public void ai( Player player, ArrayList<Projectile> projectiles) throws SlickException
@@ -143,6 +146,7 @@ public class Sentry extends Mob {
 			seePlayer=true;
 			canShoot=false;
 			projectiles.add(new Projectile(x+32,y+24,player.x+32,player.y+32,false));
+			attacksfx.play();
 			Timer waittime = new Timer();
 			waittime.schedule(new TimerTask()
 			{

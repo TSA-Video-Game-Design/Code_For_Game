@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 
 public class Meleebot extends Mob {
 		int attackTimer;
+		Sound attacksfx;
 	public Meleebot(float myx, float myy) throws SlickException 
 	{
 		hp = 70;
@@ -36,6 +38,7 @@ public class Meleebot extends Mob {
 		sprite = idle;
 		sprite.setCurrentFrame(1);
 		attackTimer=0;
+		attacksfx=new Sound("res/sound/meleebotsfx"+((int)(Math.random()*2))+".wav");
 	}
 	public void ai(Player player, ArrayList<Projectile> projectiles)
 	{
@@ -55,7 +58,7 @@ public class Meleebot extends Mob {
 				sprite=idle;
 				if (((angle < (Math.PI/2)) && (angle > (Math.PI/4))) || ((angle > (Math.PI/-2)) && (angle < (Math.PI/-4))))
 				{ 
-					if(player.y+32>y)
+					if(player.y+32>y+40)
 					{
 						directionrnd=1;
 						sprite.setCurrentFrame(directionrnd);
@@ -74,7 +77,7 @@ public class Meleebot extends Mob {
 				}
 				if ((angle > (Math.PI/-4)) && (angle < (Math.PI/4)))
 				{
-					if(player.x+32>x)
+					if(player.x+32>x+40)
 					{
 						directionrnd=3;
 						sprite.setCurrentFrame(directionrnd);
@@ -135,9 +138,10 @@ public class Meleebot extends Mob {
 			}
 			if((sprite != idle)&&(sprite.getFrame()==2))
 			{
+				attacksfx.play();
 				if(attackTimer==8)
 				{
-					player.hp--;
+					player.hurt();
 					attackTimer=0;
 				}
 				else

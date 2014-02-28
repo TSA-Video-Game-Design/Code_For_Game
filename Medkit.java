@@ -14,7 +14,7 @@ public class Medkit extends Entity {
 	{
 		x=myx;
 		y=myy;
-		image = new Image("res/Med Kit.png");
+		image = new Image("res/Video Game Tiles - Pixel by Pixel/Med Kit.png");
 		canPickup=0;
 		sfx = new Sound("res/sound/heal.wav");
 	}

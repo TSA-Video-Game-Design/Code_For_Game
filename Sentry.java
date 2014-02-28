@@ -21,7 +21,7 @@ public class Sentry extends Mob {
 		hp = 60;
 		money = 5;
 		dmg = 2;
-		image = new Image("res/Sentry Down.png");
+		image = new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Down.png");
 		seePlayer = false;
 		direction = "Down";
 		x=myx;
@@ -36,12 +36,12 @@ public class Sentry extends Mob {
 		knockbackY=0;
 		knockbackTimer=0;
 		knockedBack=false;
-		Image[] upA = {new Image("res/Sentry Up Shoot 1.png"),new Image("res/Sentry Up Shoot 2.png")};
-		Image[] downA= {new Image("res/Sentry Down Shoot 1.png"),new Image("res/Sentry Down Shoot 2.png")};
-		Image[] leftA={new Image("res/Sentry Left Shoot 1.png"),new Image("res/Sentry Left Shoot 2.png")};
-		Image[] rightA={new Image("res/Sentry Right Shoot 1.png"),new Image("res/Sentry Right Shoot 2.png")};
-		Image[] idleA={new Image("res/Sentry Left.png"),new Image("res/Sentry Right.png"),new Image("res/Sentry Up.png"),new Image("res/Sentry Down.png"),};
-		Image[] seeA={new Image("res/Sentry Left Alert.png"),new Image("res/Sentry Right Alert.png"),new Image("res/Sentry Up.png"),new Image("res/Sentry Down Alert.png")};
+		Image[] upA = {new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Up Shoot 1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Up Shoot 2.png")};
+		Image[] downA= {new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Down Shoot 1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Down Shoot 2.png")};
+		Image[] leftA={new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Left Shoot 1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Left Shoot 2.png")};
+		Image[] rightA={new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Right Shoot 1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Right Shoot 2.png")};
+		Image[] idleA={new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Left.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Right.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Up.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Down.png"),};
+		Image[] seeA={new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Left Alert.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Right Alert.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Up.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Down Alert.png")};
 		left = new Animation(leftA,500,true);
 		right = new Animation(rightA,500,true);
 		up = new Animation(upA,500,true);

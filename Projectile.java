@@ -32,9 +32,9 @@ public class Projectile extends Entity {
 		fromPlayer = playerowner;
 		canDamage=true;
 		if (fromPlayer)
-			image = new Image("res/Energy Ball Blue.png");
+			image = new Image("res/Video Game Tiles - Pixel by Pixel/Energy Ball Blue.png");
 		else
-			image = new Image("res/Energy Ball Red.png");
+			image = new Image("res/Video Game Tiles - Pixel by Pixel/Energy Ball Red.png");
 		
 	}
 	
@@ -73,7 +73,7 @@ public class Projectile extends Entity {
 				{
 					player.hurt();
 					canDamage=false;
-					image = new Image("res/Blank.png");
+					image = new Image("res/Video Game Tiles - Pixel by Pixel/Blank.png");
 				}
 			}
 			else
@@ -86,7 +86,7 @@ public class Projectile extends Entity {
 					{
 						moby.hurt(10);
 						canDamage=false;
-						image = new Image("res/Blank.png");
+						image = new Image("res/Video Game Tiles - Pixel by Pixel/Blank.png");
 					}
 				}
 			}

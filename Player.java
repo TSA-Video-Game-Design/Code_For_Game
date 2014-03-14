@@ -11,10 +11,11 @@ public class Player extends Entity {
     public int hp;
     Rectangle hitbox;
     Circle reach;
+    public boolean isDead=false;
     public int shoot1=0;
     public int shoot2 = 0;
     public String weapon1 = "screw driver";
-    public String weapon2 = "saber";
+    public String weapon2 = "energy gun";
     public boolean canAttack = true;
     public boolean swinging;
     public Image[] leftA = {new Image("res/Video Game Tiles - Pixel by Pixel/Left A1.png"), new Image("res/Video Game Tiles - Pixel by Pixel/Left A2.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left A3.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left A4.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left B1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left B2.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left B3.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left B4.png")};
@@ -130,6 +131,10 @@ public class Player extends Entity {
     {
     	hp--;
     	hurtsfx.play();
+    	if (hp<0)
+    	{
+    		isDead=true;
+    	}
     }
     public String toString()
     {

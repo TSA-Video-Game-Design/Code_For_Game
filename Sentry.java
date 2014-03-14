@@ -55,7 +55,7 @@ public class Sentry extends Mob {
 	
 	public void ai( Player player, ArrayList<Projectile> projectiles) throws SlickException
 	{
-		if (canSeePlayer(player, 384))
+		if (canSeePlayer(player, 400))
 		{
 			seePlayer=true;
 			Rectangle[] ranges = {new Rectangle(x-224,y+20,224,40),new Rectangle(x+20,y-224,40,224),new Rectangle(x+80,y+20,224,40),new Rectangle(x+20,y+80,40,224)};
@@ -81,8 +81,8 @@ public class Sentry extends Mob {
 			double magnitude = Math.sqrt(Math.pow(i,2) + Math.pow(j,2));
 			if (!((stayaway.intersects(mobbox))||(stayaway.contains(x,y))))
 			{
-				x = (float) (x + ((i/magnitude)*1.5*2));
-				y = (float) (y + ((j/magnitude)*1.5*2));
+				x = (float) (x + ((i/magnitude)*1.5*2*1.5));
+				y = (float) (y + ((j/magnitude)*1.5*2*1.5));
 			}
 			x = (float) (x + ((i/magnitude)*-1.5));
 			y = (float) (y + ((j/magnitude)*-1.5));

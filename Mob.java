@@ -49,7 +49,7 @@ public abstract class Mob extends Entity {
 		}
 	}
 	
-	public void ai(Player player, ArrayList<Projectile> projectiles) throws SlickException
+	public void ai(Player player, ArrayList<Projectile> projectiles, ArrayList<Wall> walls) throws SlickException
 	{
 			
 	}

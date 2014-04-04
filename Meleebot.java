@@ -14,14 +14,10 @@ import org.newdawn.slick.geom.Rectangle;
 public class Meleebot extends Mob {
 		int attackTimer;
 		Sound attacksfx;
-		boolean canMoveX;
-		boolean canMoveY;
 	public Meleebot(float myx, float myy) throws SlickException 
 	{
 		hp = 70;
-		money = 5;
 		seePlayer = false;
-		dmg = 3;
 		direction = "Down";
 		x=myx;
 		y=myy;

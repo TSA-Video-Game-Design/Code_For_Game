@@ -12,8 +12,6 @@ import org.newdawn.slick.geom.Rectangle;
 
 public abstract class Mob extends Entity {
 	public double hp;
-	public int dmg;
-    public int money;
     public Image image;
     public Image[] leftA;
     public Image[] rightA;
@@ -25,13 +23,10 @@ public abstract class Mob extends Entity {
 	public int moveY;
 	public boolean canShoot;
 	public int directionrnd;
-	public static boolean moveagain;
+	public boolean canMoveX;
+	public boolean canMoveY;
 	public Timer timer = new Timer();
 	public Timer subtimer = new Timer();
-	public int knockbackX;
-	public int knockbackY;
-	public int knockbackTimer;
-	public boolean knockedBack;
 	public Mob()
 	{
 		

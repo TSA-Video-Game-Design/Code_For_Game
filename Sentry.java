@@ -16,28 +16,18 @@ public class Sentry extends Mob {
 	boolean subSeePlayer=false;
 	Animation see;
 	Sound attacksfx;
-	boolean canMoveX;
-	boolean canMoveY;
 	public Sentry(float myx, float myy) throws SlickException 
 	{
 		hp = 60;
-		money = 5;
-		dmg = 2;
 		image = new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Down.png");
 		seePlayer = false;
 		direction = "Down";
 		x=myx;
 		y=myy;
-		moveX=0;
-		moveY=0;
 		canShoot=true;
 		directionrnd = 3;
 		//directionrnd isnt acutally random here. i just needed a direction variable as a int type
 		//Call stuff at diff frames in the animation class
-		knockbackX=0;
-		knockbackY=0;
-		knockbackTimer=0;
-		knockedBack=false;
 		canMoveX=true;
 		canMoveY=true;
 		Image[] upA = {new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Up Shoot 1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Up Shoot 2.png")};

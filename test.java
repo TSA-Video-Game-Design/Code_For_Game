@@ -6,6 +6,7 @@ import org.lwjgl.openal.AL;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -15,6 +16,7 @@ import org.newdawn.slick.MusicListener;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.ShapeRenderer;
 import org.newdawn.slick.tiled.TiledMap;
 
 public class test extends BasicGame implements MusicListener {
@@ -28,6 +30,7 @@ public class test extends BasicGame implements MusicListener {
 	ArrayList<Wall> walls = new ArrayList<Wall>();
 	ArrayList<Mob> mobs = new ArrayList<Mob>();
 	ArrayList<Medkit> medkits = new ArrayList<Medkit>();
+	ArrayList<Explosion> explosions = new ArrayList<Explosion>();
 	int x, y;
 	boolean titleScreen = false;
 	boolean menu;
@@ -61,6 +64,7 @@ public class test extends BasicGame implements MusicListener {
 	Rectangle levelchange;
 	boolean doormove = false;
 	public Music goodMusic;
+	Nurse testbot;
 	public test(String title, int lev) throws SlickException {
 		super(title);
 		level = lev;
@@ -81,13 +85,27 @@ public class test extends BasicGame implements MusicListener {
 				meds.image.draw(meds.x, meds.y);
 			}
 			for (Mob moby : mobs) {
-				moby.sprite.draw(moby.x, moby.y);
+				if((moby instanceof Drone)&&(!((Drone)moby).canExplode))
+					moby.sprite.draw(moby.x,moby.y,new Color(80,80,80));
+				else if((moby instanceof Drone)&&(((Drone)moby).timer>0))
+					moby.sprite.draw(moby.x,moby.y,new Color(255,240-(((Drone)moby).timer*4),240-(((Drone)moby).timer*4)));
+				else
+					moby.sprite.draw(moby.x, moby.y);
+				g.drawString(moby.hp + "", moby.x, moby.y-4);
+			}
+			for(Explosion explosive: explosions)
+			{
+				explosive.sprite.draw(explosive.x,explosive.y);
 			}
 			for (Projectile projecty : projectiles) {
 				projecty.image.draw(projecty.x, projecty.y);
 			}
 			for (int i = 2; i < layers; i++) {
 				grassMap.render(x - 820, y - 64, i); // objects
+			}
+			for (Wall wally:walls)
+			{
+				wally.image.draw(wally.x,wally.y);
 			}
 			HUD.draw(-22, -22);
 			ItemHUD.draw(660, 340);
@@ -101,6 +119,8 @@ public class test extends BasicGame implements MusicListener {
 			}
 			
 			if(slide) journal.draw(0,0);
+			ShapeRenderer shprndr = new ShapeRenderer();
+			ShapeRenderer.draw(new Rectangle(testbot.x,testbot.y,testbot.image.getWidth(),testbot.image.getHeight()));
 			
 		}
 
@@ -212,10 +232,12 @@ public class test extends BasicGame implements MusicListener {
 			}
 
 		}
-		mobs.add(new Sentry(1024, 256));
-		mobs.add(new Meleebot(2048, 128));
-		mobs.add(new Meleebot(2048,2048));
-		
+		testbot=new Nurse(900, 312);
+		mobs.add(testbot);
+		mobs.add(new Meleebot(936,312));
+	//	mobs.add(new Meleebot(2048, 128));
+		//mobs.add(new Meleebot(2048,2048));
+		/*
 		for (int i=0; i < 3;i++)
 		{
 			mobs.add(new Meleebot(((int)Math.random()*1000)+(164*i),((int)Math.random()*512)+(128*i)));
@@ -231,7 +253,7 @@ public class test extends BasicGame implements MusicListener {
 			mobs.add(new Sentry(900, 1100));
 			mobs.add(new Sentry(980, 1100));
 			mobs.add(new Sentry(1060, 1100));
-		}
+		}*/
 		
 	}
 
@@ -330,26 +352,43 @@ public class test extends BasicGame implements MusicListener {
 									"res/Video Game Tiles - Pixel by Pixel/Right A1.png") },
 									1, false);
 				player.sprite.update(arg1);
-				// updates for list of stuff
+				//TODO updates for list of stuff
 				for (int i = 0; i < mobs.size(); i++) {
-					mobs.get(i).ai(player, projectiles);
-					if (mobs.get(i).hp <= 0) {
+					mobs.get(i).ai(player, projectiles, walls, mobs);
+					if (mobs.get(i).hp <= 0) 
+					{
 						explosion = new Sound("res/sound/Explosion"
 								+ ((int) (Math.random() * 3)) + ".wav");
 						explosion.play();
 						mobs.get(i).dropHP(.4, medkits);
+						explosions.add(new Explosion(mobs.get(i).x,mobs.get(i).y));
 						mobs.remove(i);
-						// EXPLOSION!
 					}
+				}
+				for (int i = 0; i<explosions.size();i++)
+				{
+					explosions.get(i).update(explosions,i);
 				}
 				for (int i = 0; i < projectiles.size(); i++) {
 					projectiles.get(i).update(10, player, mobs, projectiles);
-					if (projectiles.size() > 1) {
-						if (Math.sqrt((Math.pow(projectiles.get(i).startingX
-								- projectiles.get(i).x, 2))
-								+ (Math.pow(projectiles.get(i).startingY
-										- projectiles.get(i).y, 2))) > 2048)
+					if (projectiles.size() > 0) 
+					{
+						if (Math.sqrt((Math.pow(projectiles.get(i).startingX - projectiles.get(i).x, 2)) + (Math.pow(projectiles.get(i).startingY - projectiles.get(i).y, 2))) > 200
+								)
 							projectiles.remove(i);
+						else
+						{
+							Rectangle bullet = new Rectangle(projectiles.get(i).x,projectiles.get(i).y,projectiles.get(i).image.getWidth(),projectiles.get(i).image.getHeight());
+							for(Wall wally:walls)
+							{	
+								Rectangle wallbox = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+								if ((wallbox.intersects(bullet))||(wallbox.contains(projectiles.get(i).x,projectiles.get(i).y)))
+								{
+									projectiles.remove(i);
+									break;
+								}
+							}
+						}
 					}
 				}
 				for (int i = 0; i < medkits.size(); i++) {
@@ -417,6 +456,10 @@ public class test extends BasicGame implements MusicListener {
 								for (Mob moby : mobs) {
 									if (player.meleeRange(moby, 128)) {
 										moby.hurt(10);
+										if (moby instanceof Drone)
+										{
+											((Drone)moby).canExplode=false;
+										}
 									}
 								}
 							} else if (player.getWeapon1().equals("saber")) {

@@ -12,6 +12,7 @@ import org.newdawn.slick.geom.Rectangle;
 
 public abstract class Mob extends Entity {
 	public double hp;
+	public double maxhp;
     public Image image;
     public Image[] leftA;
     public Image[] rightA;
@@ -44,7 +45,7 @@ public abstract class Mob extends Entity {
 		}
 	}
 	
-	public void ai(Player player, ArrayList<Projectile> projectiles, ArrayList<Wall> walls) throws SlickException
+	public void ai(Player player, ArrayList<Projectile> projectiles, ArrayList<Wall> walls, ArrayList<Mob> mobs) throws SlickException
 	{
 			
 	}

@@ -18,6 +18,7 @@ public class Drone extends Mob{
 	public Drone(float myx, float myy) throws SlickException 
 	{
 		hp = 30;
+		maxhp=hp;
 		image = new Image("res/Drone Down 1.png");
 		direction = "Down";
 		seePlayer=false;
@@ -40,7 +41,7 @@ public class Drone extends Mob{
 		//attacksfx
 	}
 
-	public void ai(Player player, ArrayList<Projectile> projectiles, ArrayList<Wall> walls)
+	public void ai(Player player, ArrayList<Projectile> projectiles, ArrayList<Wall> walls, ArrayList<Mob> mobs)
 	{
 		float i = (player.x-x);
 		float j = (player.y-y);

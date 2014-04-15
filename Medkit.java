@@ -14,8 +14,8 @@ public class Medkit extends Entity {
 	{
 		x=myx;
 		y=myy;
-		image = new Image("res/Video Game Tiles - Pixel by Pixel/Med Kit.png");
 		canPickup=0;
+		image = new Image("res/Video Game Tiles - Pixel by Pixel/Med Kit.png");
 		sfx = new Sound("res/sound/heal.wav");
 	}
 	public void update(Player player, int i, ArrayList<Medkit> meds)

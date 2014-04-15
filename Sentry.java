@@ -19,6 +19,7 @@ public class Sentry extends Mob {
 	public Sentry(float myx, float myy) throws SlickException 
 	{
 		hp = 60;
+		maxhp=hp;
 		image = new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Down.png");
 		seePlayer = false;
 		direction = "Down";
@@ -47,7 +48,7 @@ public class Sentry extends Mob {
 		attacksfx = new Sound("res/sound/Laser.wav");
 	}
 	
-	public void ai( Player player, ArrayList<Projectile> projectiles, ArrayList<Wall> walls) throws SlickException
+	public void ai( Player player, ArrayList<Projectile> projectiles, ArrayList<Wall> walls, ArrayList<Mob> mobs) throws SlickException
 	{
 		if (canSeePlayer(player, 400))
 		{

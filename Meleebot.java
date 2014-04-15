@@ -17,6 +17,7 @@ public class Meleebot extends Mob {
 	public Meleebot(float myx, float myy) throws SlickException 
 	{
 		hp = 70;
+		maxhp=hp;
 		seePlayer = false;
 		direction = "Down";
 		x=myx;
@@ -40,7 +41,7 @@ public class Meleebot extends Mob {
 		canMoveX=true;
 		canMoveY=true;
 	}
-	public void ai(Player player, ArrayList<Projectile> projectiles, ArrayList<Wall> walls)
+	public void ai(Player player, ArrayList<Projectile> projectiles, ArrayList<Wall> walls, ArrayList<Mob> mobs)
 	{
 		float i = (player.x-x);
 		float j = (player.y-y);

@@ -394,6 +394,8 @@ public class test extends BasicGame implements MusicListener {
 				for (int i = 0; i < medkits.size(); i++) {
 					medkits.get(i).update(player, i, medkits);
 				}
+				
+				
 				if (input.isKeyDown(Input.KEY_A)) {
 					if (player.swinging == false) {
 						player.direction = "left";
@@ -401,21 +403,21 @@ public class test extends BasicGame implements MusicListener {
 						player.sprite = player.left;
 						player.sprite.update(arg1);
 					}
-				} else if (input.isKeyDown(Input.KEY_D)) { // right
+				}  if (input.isKeyDown(Input.KEY_D)) { // right
 					if (player.swinging == false) {
 						player.direction = "right";
 						collisionCheck(-4, 0, "left");
 						player.sprite = player.right;
 						player.sprite.update(arg1);
 					}
-				} else if (input.isKeyDown(Input.KEY_W)) { // up
+				}  if (input.isKeyDown(Input.KEY_W)) { // up
 					if (player.swinging == false) {
 						player.direction = "up";
 						collisionCheck(0, 4, "down");
 						player.sprite = player.up;
 						player.sprite.update(arg1);
 					}
-				} else if (input.isKeyDown(Input.KEY_S)) { // down
+				}  if (input.isKeyDown(Input.KEY_S)) { // down
 					if (player.swinging == false) {
 						player.direction = "down";
 						collisionCheck(0, -4, "up");
@@ -685,29 +687,41 @@ public class test extends BasicGame implements MusicListener {
 
 	public void collisionCheck(int x1, int y1, String direction)
 			throws SlickException {
-
-		for (Wall wally : walls) {
-			wally.collision(player);
-		}
-		ArrayList<Boolean> cantMove = new ArrayList<Boolean>();
-		for (Wall wally : walls) {
-			if (direction.equals("right")) {
-				cantMove.add(wally.cannotMoveRight == false);
-			} else if (direction.equals("left")) {
-				cantMove.add(wally.cannotMoveLeft == false);
-			} else if (direction.equals("up")) {
-				cantMove.add(wally.cannotMoveUp == false);
-			} else if (direction.equals("down")) {
-				cantMove.add(wally.cannotMoveDown == false);
+		//wall moves, player stationary
+		
+		for(Wall wally: walls)
+		{
+			Rectangle box = new Rectangle(player.x,player.y,player.image.getWidth(),player.image.getHeight());
+			if(direction.equals("left"))
+			{//<-
+				boolean a=(box.contains(wally.x-4,wally.y));
+				boolean b=(box.contains(wally.x-4,wally.y+wally.image.getHeight()));
+				if(a||b)
+					x1=0;
 			}
-
-		}
-		for (boolean x : cantMove) {
-			if (x == false) {
-				pasta = false;
+			else if(direction.equals("right"))
+			{
+				boolean a=(box.contains(wally.x+wally.image.getWidth()+4,wally.y));
+				boolean b=(box.contains(wally.x+wally.image.getWidth()+4,wally.y+wally.image.getHeight()));
+				if(a||b)
+					x1=0;
 			}
+			else if(direction.equals("up"))
+			{
+				boolean a=(box.contains(wally.x,wally.y-4));
+				boolean b=(box.contains(wally.x+wally.image.getWidth(),wally.y-4));
+				if(a||b)
+					y1=0;
+			}
+			else if(direction.equals("down"))
+			{
+				boolean a=(box.contains(wally.x,wally.y+wally.image.getHeight()+4));
+				boolean b=(box.contains(wally.x+wally.image.getWidth(),wally.y+wally.image.getHeight()+4));
+				if(a||b)
+					y1=0;
+			}
+			
 		}
-		if (pasta == true) {
 			// TODO Keep adding the things on the screen as we make more stuff
 			x += x1;
 			y += y1;
@@ -740,7 +754,7 @@ public class test extends BasicGame implements MusicListener {
 				}
 			} else
 				steptimer++;
-		}
+		
 
 	}
 

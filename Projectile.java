@@ -14,7 +14,6 @@ public class Projectile extends Entity {
 		double magnitude;
 		boolean fromPlayer;
 		boolean canDamage;
-		int traveled;
 	public Projectile(float myx, float myy, float myx1, float myy1, boolean playerowner) throws SlickException 
 	{
 		x = myx;
@@ -32,7 +31,6 @@ public class Projectile extends Entity {
 		cannotMoveDown=false;
 		fromPlayer = playerowner;
 		canDamage=true;
-		traveled = 0;
 		if (fromPlayer)
 			image = new Image("res/Video Game Tiles - Pixel by Pixel/Energy Ball Blue.png");
 		else
@@ -43,7 +41,6 @@ public class Projectile extends Entity {
 	public void update(int multiple,Player player, ArrayList<Mob> mobs, ArrayList<Projectile> projectiles) throws SlickException
 	{
 		double angle = Math.atan(j/i);
-		traveled += 10;
 		if (((angle < (Math.PI/2)) && (angle > (Math.PI/4))) || ((angle > (Math.PI/-2)) && (angle < (Math.PI/-4))))
 		{ 
 			if(y1>startingY)

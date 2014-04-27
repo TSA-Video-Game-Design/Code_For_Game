@@ -44,7 +44,18 @@ public abstract class Mob extends Entity {
 			meds.add(new Medkit(x+24,y+48));
 		}
 	}
-	
+	public void dropGun(ArrayList<Pickup> pickups) throws SlickException
+	{
+			Pickup agun = new Pickup(x+24,y+48);
+			agun.image= new Image("res/Video Game Tiles - Pixel by Pixel/Laser Gun.png");
+			pickups.add(agun);
+	}
+	public void dropSword(ArrayList<Pickup> pickups) throws SlickException
+	{
+			Pickup agun = new Pickup(x+24,y+48);
+			agun.image= new Image("res/Video Game Tiles - Pixel by Pixel/Energy Saber.png");
+			pickups.add(agun);
+	}
 	public void ai(Player player, ArrayList<Projectile> projectiles, ArrayList<Wall> walls, ArrayList<Mob> mobs) throws SlickException
 	{
 			

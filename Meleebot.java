@@ -19,19 +19,28 @@ public class Meleebot extends Mob {
 		hp = 70;
 		maxhp=hp;
 		seePlayer = false;
-		direction = "Down";
+		direction = "down";
 		x=myx;
 		y=myy;
 		image = new Image("res/Video Game Tiles - Pixel by Pixel/Warrior Down.png");
-		Image[] leftA = {new Image("res/Video Game Tiles - Pixel by Pixel/Warrior Left Attack1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Warrior Left Attack2.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Warrior Left Attack3.png")};
-		Image[] rightA = {new Image("res/Video Game Tiles - Pixel by Pixel/Warrior Right Attack1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Warrior Right Attack2.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Warrior Right Attack3.png")};
-		Image[] upA = {new Image("res/Video Game Tiles - Pixel by Pixel/Warrior Up Attack1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Warrior Up Attack2.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Warrior Up Attack3.png")};
-		Image[] downA = {new Image("res/Video Game Tiles - Pixel by Pixel/Warrior Down Attack1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Warrior Down Attack2.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Warrior Down Attack3.png")};
-		Image[] idleA={new Image("res/Video Game Tiles - Pixel by Pixel//Warrior Up.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Warrior Down.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Warrior Left.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Warrior Right.png")};
+		Image[] upA = {new Image("res/Melee Bot/Attack/B1.png"),new Image("res/Melee Bot/Attack/B2.png"),new Image("res/Melee Bot/Attack/B3.png")};
+		Image[] downA = {new Image("res/Melee Bot/Attack/F1.png"),new Image("res/Melee Bot/Attack/F2.png"),new Image("res/Melee Bot/Attack/F3.png")};
+		Image[] leftA = {new Image("res/Melee Bot/Attack/L1.png"),new Image("res/Melee Bot/Attack/L2.png"),new Image("res/Melee Bot/Attack/L3.png")};
+		Image[] rightA = {new Image("res/Melee Bot/Attack/R1.png"),new Image("res/Melee Bot/Attack/R2.png"),new Image("res/Melee Bot/Attack/R3.png")};
+		Image[] upleftA = {new Image("res/Melee Bot/Attack/BL1.png"),new Image("res/Melee Bot/Attack/BL2.png"),new Image("res/Melee Bot/Attack/BL3.png")};
+		Image[] uprightA = {new Image("res/Melee Bot/Attack/BR1.png"),new Image("res/Melee Bot/Attack/BR2.png"),new Image("res/Melee Bot/Attack/BR3.png")};
+		Image[] downleftA = {new Image("res/Melee Bot/Attack/FL1.png"),new Image("res/Melee Bot/Attack/FL2.png"),new Image("res/Melee Bot/Attack/FL3.png")};
+		Image[] downrightA = {new Image("res/Melee Bot/Attack/FR1.png"),new Image("res/Melee Bot/Attack/FR2.png"),new Image("res/Melee Bot/Attack/FR3.png")};
+		Image[] idleA={new Image("res/Melee Bot/Movement/Warrior Back.png"),new Image("res/Melee Bot/Movement/Warrior 1.png"),new Image("res/Melee Bot/Movement/Warrior Left.png"),new Image("res/Melee Bot/Movement/Warrior Right.png"),
+				new Image("res/Melee Bot/Movement/Warrior BL.png"),new Image("res/Melee Bot/Movement/Warrior BR.png"),new Image("res/Melee Bot/Movement/Warrior FL.png"),new Image("res/Melee Bot/Movement/Warrior FR.png")};
 		left = new Animation (leftA,120,true);
 		right = new Animation(rightA,120,true);
 		up = new Animation(upA,120,true);
 		down = new Animation(downA,120,true);
+		upleft = new Animation(upleftA,120,true);
+		upright = new Animation(uprightA,120,true);
+		downleft= new Animation(downleftA,120,true);
+		downright = new Animation(downrightA,120,true);
 		idle = new Animation(idleA,1000,false);
 		directionrnd=1;
 		sprite = idle;
@@ -112,83 +121,241 @@ public class Meleebot extends Mob {
 					if(canMoveY)
 					y = (float) (y + ((j/magnitude)*3));
 				sprite=idle;
-				if (((angle < (Math.PI/2)) && (angle > (Math.PI/4))) || ((angle > (Math.PI/-2)) && (angle < (Math.PI/-4))))
-				{ 
+				// Up Down
+				if (((angle < Math.PI * 3 / -8) && (angle >= Math.PI / -2))
+						|| ((angle >= Math.PI * 3 / 8) && (angle <= Math.PI / 2))) {
 					if(player.y+32>y+40)
 					{
 						directionrnd=1;
 						sprite.setCurrentFrame(directionrnd);
+						direction="down";
 						up.restart();
 						left.restart();
 						right.restart();
+						upleft.restart();
+						upright.restart();
+						downleft.restart();
+						downright.restart();
 					}
 					else
 					{
 						directionrnd=0;
 						sprite.setCurrentFrame(directionrnd);
+						direction="up";
 						down.restart();
 						left.restart();
 						right.restart();
+						upleft.restart();
+						upright.restart();
+						downleft.restart();
+						downright.restart();
 					}
 				}
-				if ((angle > (Math.PI/-4)) && (angle < (Math.PI/4)))
-				{
+				// Left Right
+				else
+				if ((angle < Math.PI / 8) && (angle > Math.PI / -8)) {
 					if(player.x+32>x+40)
 					{
 						directionrnd=3;
 						sprite.setCurrentFrame(directionrnd);
+						direction="right";
 						up.restart();
 						down.restart();
 						left.restart();
+						upleft.restart();
+						upright.restart();
+						downleft.restart();
+						downright.restart();
 					}
 					else
 					{
 						directionrnd=2;
 						sprite.setCurrentFrame(directionrnd);
+						direction="left";
 						up.restart();
 						down.restart();
 						right.restart();
+						upleft.restart();
+						upright.restart();
+						downleft.restart();
+						downright.restart();
 					}
 				}
+				// UpLeft DownRight
+				else
+				if ((angle > Math.PI / 8) && (angle < Math.PI * 3 / 8)) {
+					if(player.y+32>y+40)
+					{
+						directionrnd=7;
+						sprite.setCurrentFrame(directionrnd);
+						direction="downright";
+						up.restart();
+						left.restart();
+						right.restart();
+						upleft.restart();
+						upright.restart();
+						downleft.restart();
+					}
+					else
+					{
+						directionrnd=4;
+						sprite.setCurrentFrame(directionrnd);
+						direction="upleft";
+						down.restart();
+						left.restart();
+						right.restart();
+						upright.restart();
+						downleft.restart();
+						downright.restart();
+					}
+					
+				}
+				// UpRight DownLeft
+				else
+				if ((angle > Math.PI * 3 / -8) && (angle < Math.PI / -8)) {
+					if(player.y+32>y+40)
+					{
+						directionrnd=6;
+						sprite.setCurrentFrame(directionrnd);
+						direction="downleft";
+						up.restart();
+						left.restart();
+						right.restart();
+						upleft.restart();
+						upright.restart();
+						downright.restart();
+					}
+					else
+					{
+						directionrnd=5;
+						sprite.setCurrentFrame(directionrnd);
+						direction="upright";
+						down.restart();
+						left.restart();
+						right.restart();
+						upleft.restart();
+						downleft.restart();
+						downright.restart();
+					}
+				}
+				
 			}
 			else
 			{//Above=sprites for moveing around, below=sprites for attacking
-				if (((angle < (Math.PI/2)) && (angle > (Math.PI/4))) || ((angle > (Math.PI/-2)) && (angle < (Math.PI/-4))))
-				{ 
-					if(player.y+32>y)
+				if (((angle < Math.PI * 3 / -8) && (angle >= Math.PI / -2))
+						|| ((angle >= Math.PI * 3 / 8) && (angle <= Math.PI / 2))) {
+					if(player.y+32>y+40)
 					{
-						sprite = down;
 						directionrnd=1;
+						sprite=down;
+						direction="down";
 						up.restart();
 						left.restart();
 						right.restart();
+						upleft.restart();
+						upright.restart();
+						downleft.restart();
+						downright.restart();
 					}
 					else
 					{
-						sprite = up;
 						directionrnd=0;
+						sprite=up;
+						direction="up";
 						down.restart();
 						left.restart();
 						right.restart();
+						upleft.restart();
+						upright.restart();
+						downleft.restart();
+						downright.restart();
 					}
 				}
-				if ((angle > (Math.PI/-4)) && (angle < (Math.PI/4)))
-				{
-					if(player.x+32>x)
+				// Left Right
+				else
+				if ((angle < Math.PI / 8) && (angle > Math.PI / -8)) {
+					if(player.x+32>x+40)
 					{
-						sprite =right;
 						directionrnd=3;
+						sprite=right;
+						direction="right";
 						up.restart();
 						down.restart();
 						left.restart();
+						upleft.restart();
+						upright.restart();
+						downleft.restart();
+						downright.restart();
 					}
 					else
 					{
-						sprite = left;
 						directionrnd=2;
+						sprite=left;
+						direction="left";
 						up.restart();
 						down.restart();
 						right.restart();
+						upleft.restart();
+						upright.restart();
+						downleft.restart();
+						downright.restart();
+					}
+				}
+				// UpLeft DownRight
+				else
+				if ((angle > Math.PI / 8) && (angle < Math.PI * 3 / 8)) {
+					if(player.y+32>y+40)
+					{
+						directionrnd=7;
+						sprite=downright;
+						direction="downright";
+						up.restart();
+						left.restart();
+						right.restart();
+						upleft.restart();
+						upright.restart();
+						downleft.restart();
+					}
+					else
+					{
+						directionrnd=4;
+						sprite=upleft;
+						direction="upleft";
+						down.restart();
+						left.restart();
+						right.restart();
+						upright.restart();
+						downleft.restart();
+						downright.restart();
+					}
+					
+				}
+				// UpRight DownLeft
+				else
+				if ((angle > Math.PI * 3 / -8) && (angle < Math.PI / -8)) {
+					if(player.y+32>y+40)
+					{
+						directionrnd=6;
+						sprite=downleft;
+						direction="downleft";
+						up.restart();
+						left.restart();
+						right.restart();
+						upleft.restart();
+						upright.restart();
+						downright.restart();
+					}
+					else
+					{
+						directionrnd=5;
+						sprite=upright;
+						direction="upright";
+						down.restart();
+						left.restart();
+						right.restart();
+						upleft.restart();
+						downleft.restart();
+						downright.restart();
 					}
 				}
 			}

@@ -19,8 +19,8 @@ public class Drone extends Mob{
 	{
 		hp = 30;
 		maxhp=hp;
-		image = new Image("res/Drone Down 1.png");
-		direction = "Down";
+		image = new Image("res/Drone/Drone/Drone F.png");
+		direction = "down";
 		seePlayer=false;
 		x=myx;
 		y=myy;
@@ -29,14 +29,22 @@ public class Drone extends Mob{
 		timer=0;
 		enabletimer=0;
 		canExplode=true;
-		Image[] upA = {new Image("res/Drone Up 1.png")};
-		Image[] downA = {new Image("res/Drone Down 1.png")};
-		Image[] leftA = {new Image("res/Drone Left 1.png")};
-		Image[] rightA = {new Image("res/Drone Right 1.png")};
+		Image[] upA = {new Image("res/Drone/Drone/Drone B.png")};
+		Image[] downA = {new Image("res/Drone/Drone/Drone F.png")};
+		Image[] leftA = {new Image("res/Drone/Drone/Drone L.png")};
+		Image[] rightA = {new Image("res/Drone/Drone/Drone R.png")};
+		Image[] upleftA = {new Image("res/Drone/Drone/Drone BL.png")};
+		Image[] uprightA = {new Image("res/Drone/Drone/Drone BR.png")};
+		Image[] downleftA = {new Image("res/Drone/Drone/Drone FL.png")};
+		Image[] downrightA = {new Image("res/Drone/Drone/Drone FR.png")};
 		left = new Animation(leftA,250,true);
 		right = new Animation(rightA,250,true);
 		up = new Animation(upA,250,true);
 		down = new Animation(downA,250,true);
+		upleft = new Animation(upleftA,250,true);
+		upright = new Animation(uprightA,250,true);
+		downleft = new Animation(downleftA,250,true);
+		downright = new Animation(downrightA,250,true);
 		sprite = down;
 		//attacksfx
 	}
@@ -123,30 +131,59 @@ public class Drone extends Mob{
 			else
 				sprite.stop();
 		double angle = Math.atan(j/i);
-		if (((angle < (Math.PI/2)) && (angle > (Math.PI/4))) || ((angle > (Math.PI/-2)) && (angle < (Math.PI/-4))))
-		{ 
+		if (((angle < Math.PI * 3 / -8) && (angle >= Math.PI / -2))
+				|| ((angle >= Math.PI * 3 / 8) && (angle <= Math.PI / 2))) {
 			if(player.y+32>y)
 			{
 				sprite = down;
-				direction = "Down";
+				direction="down";
 			}
 			else
 			{
 				sprite = up;
-				direction = "Up";
+				direction="up";
 			}
 		}
-		if ((angle > (Math.PI/-4)) && (angle < (Math.PI/4)))
-		{
+		// Left Right
+		else
+		if ((angle < Math.PI / 8) && (angle > Math.PI / -8)) {
 			if(player.x+32>x)
 			{
 				sprite =right;
-				direction="Right";
+				direction="right";
 			}
 			else
 			{
 				sprite = left;
-				direction="Left";
+				direction="left";
+			}
+		}
+		// UpLeft DownRight
+		else
+		if ((angle > Math.PI / 8) && (angle < Math.PI * 3 / 8)) {
+			if(player.y+32>y)
+			{
+				sprite = downright;
+				direction="downright";
+			}
+			else
+			{
+				sprite = upleft;
+				direction="upleft";
+			}
+		}
+		// UpRight DownLeft
+		else
+		if ((angle > Math.PI * 3 / -8) && (angle < Math.PI / -8)) {
+			if(player.y+32>y)
+			{
+				sprite = downleft;
+				direction="downleft";
+			}
+			else
+			{
+				sprite = upright;
+				direction="upright";
 			}
 		}
 		}

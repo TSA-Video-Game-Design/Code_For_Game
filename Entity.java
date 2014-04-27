@@ -16,7 +16,7 @@ public abstract class Entity {
     public float startingX;
     public float startingY;
     public String direction;
-    public Animation sprite, up, down, left, right, idle;
+    public Animation sprite, up, down, left, right, idle, upleft, upright, downleft, downright;
     public Entity()
     {
     	

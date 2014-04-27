@@ -10,11 +10,12 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 
 public class Sentry extends Mob {
 	boolean subSeePlayer=false;
-	Animation see;
 	Sound attacksfx;
 	public Sentry(float myx, float myy) throws SlickException 
 	{
@@ -22,7 +23,7 @@ public class Sentry extends Mob {
 		maxhp=hp;
 		image = new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Down.png");
 		seePlayer = false;
-		direction = "Down";
+		direction = "down";
 		x=myx;
 		y=myy;
 		canShoot=true;
@@ -31,18 +32,25 @@ public class Sentry extends Mob {
 		//Call stuff at diff frames in the animation class
 		canMoveX=true;
 		canMoveY=true;
-		Image[] upA = {new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Up Shoot 1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Up Shoot 2.png")};
-		Image[] downA= {new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Down Shoot 1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Down Shoot 2.png")};
-		Image[] leftA={new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Left Shoot 1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Left Shoot 2.png")};
-		Image[] rightA={new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Right Shoot 1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Right Shoot 2.png")};
-		Image[] idleA={new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Left.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Right.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Up.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Down.png"),};
-		Image[] seeA={new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Left Alert.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Right Alert.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Up.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Sentry Down Alert.png")};
+		Image[] upA = {new Image("res/Sentry/Attack/B1.png"),new Image("res/Sentry/Attack/B2.png")};
+		Image[] downA= {new Image("res/Sentry/Attack/F1.png"),new Image("res/Sentry/Attack/F2.png")};
+		Image[] leftA={new Image("res/Sentry/Attack/L1.png"),new Image("res/Sentry/Attack/L2.png")};
+		Image[] rightA={new Image("res/Sentry/Attack/R1.png"),new Image("res/Sentry/Attack/R2.png")};
+		Image[] upleftA = {new Image("res/Sentry/Attack/BL 1.png"),new Image("res/Sentry/Attack/BL 2.png")};
+		Image[] uprightA = {new Image("res/Sentry/Attack/BR 1.png"),new Image("res/Sentry/Attack/BR 2.png")};
+		Image[] downleftA = {new Image("res/Sentry/Attack/FL 1.png"),new Image("res/Sentry/Attack/FL 2.png")};
+		Image[] downrightA = {new Image("res/Sentry/Attack/FR 1.png"),new Image("res/Sentry/Attack/FR 2.png")};
+		Image[] idleA={new Image("res/Sentry/Movement/Sentry B.png"),new Image("res/Sentry/Movement/Sentry F.png"),new Image("res/Sentry/Movement/Sentry L.png"),new Image("res/Sentry/Movement/Sentry R.png"),
+		new Image("res/Sentry/Movement/Sentry BL.png"),new Image("res/Sentry/Movement/Sentry BR.png"),new Image("res/Sentry/Movement/Sentry FL.png"),new Image("res/Sentry/Movement/Sentry FR.png")};
 		left = new Animation(leftA,500,true);
 		right = new Animation(rightA,500,true);
 		up = new Animation(upA,500,true);
 		down = new Animation(downA,500,true);
+		upleft = new Animation(upleftA,500,true);
+		upright = new Animation(uprightA,500,true);
+		downleft = new Animation(downleftA,500,true);
+		downright = new Animation(downrightA,500,true);
 		idle = new Animation(idleA,1000,false);
-		see = new Animation(seeA,1000,false);
 		sprite = idle;
 		sprite.setCurrentFrame(3);
 		attacksfx = new Sound("res/sound/Laser.wav");
@@ -53,9 +61,17 @@ public class Sentry extends Mob {
 		if (canSeePlayer(player, 400))
 		{
 			seePlayer=true;
-			Rectangle[] ranges = {new Rectangle(x-224,y+20,224,40),new Rectangle(x+20,y-224,40,224),new Rectangle(x+80,y+20,224,40),new Rectangle(x+20,y+80,40,224)};
+			float[] z = {x+20-224,y-224,x+20,y,x,y+20,x-224,y+20-224};
+			Polygon a = new Polygon(z);
+			float[] zz = {x+60,y,x+60+224,y-224,x+80+224,y+20-224,x+80,y+20};
+			Polygon b = new Polygon(zz);
+			float[] zzz={x+80,y+60,x+60,y+80,x+60+224,y+80+224,x+80+224,y+60+224};
+			Polygon c = new Polygon(zzz);
+			float[] zzzz={x,y+60,x+20,y+80,x-224,y+60+224,x+20-224,y+80+224};
+			Polygon d = new Polygon(zzzz);
+			Shape[] ranges = {new Rectangle(x-224,y+20,224,40),new Rectangle(x+20,y-224,40,224),new Rectangle(x+80,y+20,224,40),new Rectangle(x+20,y+80,40,224),a,b,d,c};
 			Rectangle theplayer = new Rectangle(player.x,player.y,player.image.getWidth(),player.image.getHeight());
-			for (Rectangle recky:ranges)
+			for (Shape recky:ranges)
 			{
 				if (recky.intersects(theplayer)||recky.contains(theplayer.getX(),theplayer.getY()))
 				{
@@ -140,50 +156,131 @@ public class Sentry extends Mob {
 			//y = (float) (y + ((j/magnitude)*-1.5));
 			//java trig is in radians
 			double angle = Math.atan(j/i);
-			//System.out.println((angle*180)/Math.PI);
-			if (((angle < (Math.PI/2)) && (angle > (Math.PI/4))) || ((angle > (Math.PI/-2)) && (angle < (Math.PI/-4))))
-			{ 
+			// Up Down
+			if (((angle < Math.PI * 3 / -8) && (angle >= Math.PI / -2))
+					|| ((angle >= Math.PI * 3 / 8) && (angle <= Math.PI / 2))) {
 				if(player.y+32>y)
 				{
 					sprite = down;
 					sprite.stopAt(1);
-					directionrnd = 3;
+					directionrnd = 1;
+					direction="down";
 					up.restart();
 					left.restart();
 					right.restart();
+					upleft.restart();
+					upright.restart();
+					downleft.restart();
+					downright.restart();
 				}
 				else
 				{
 					sprite = up;
 					sprite.stopAt(1);
-					directionrnd = 2;
+					directionrnd = 0;
+					direction="up";
 					down.restart();
 					left.restart();
 					right.restart();
+					upleft.restart();
+					upright.restart();
+					downleft.restart();
+					downright.restart();
 				}
 			}
-			if ((angle > (Math.PI/-4)) && (angle < (Math.PI/4)))
-			{
+			// Left Right
+			else
+			if ((angle < Math.PI / 8) && (angle > Math.PI / -8)) {
 				if(player.x+32>x)
 				{
 					sprite =right;
 					sprite.stopAt(1);
-					directionrnd = 1;
+					directionrnd = 3;
+					direction="right";
 					up.restart();
 					down.restart();
 					left.restart();
+					upleft.restart();
+					upright.restart();
+					downleft.restart();
+					downright.restart();
 				}
 				else
 				{
 					sprite = left;
 					sprite.stopAt(1);
-					directionrnd = 0;
+					directionrnd = 2;
+					direction="left";
 					up.restart();
 					down.restart();
 					right.restart();
+					upleft.restart();
+					upright.restart();
+					downleft.restart();
+					downright.restart();
 				}
 			}
-		}
+			// UpLeft DownRight
+			else
+			if ((angle > Math.PI / 8) && (angle < Math.PI * 3 / 8)) {
+				if(player.y+32>y)
+				{
+					sprite = downright;
+					sprite.stopAt(1);
+					directionrnd = 7;
+					direction="downright";
+					up.restart();
+					left.restart();
+					right.restart();
+					upleft.restart();
+					upright.restart();
+					downleft.restart();
+				}
+				else
+				{
+					sprite = upleft;
+					sprite.stopAt(1);
+					directionrnd = 4;
+					direction="upleft";
+					down.restart();
+					left.restart();
+					right.restart();
+					upright.restart();
+					downleft.restart();
+					downright.restart();
+				}
+			}
+			// UpRight DownLeft
+			else
+			if ((angle > Math.PI * 3 / -8) && (angle < Math.PI / -8)) {
+				if(player.y+32>y)
+				{
+					sprite = downleft;
+					sprite.stopAt(1);
+					directionrnd = 5;
+					direction="downleft";
+					up.restart();
+					left.restart();
+					right.restart();
+					upleft.restart();
+					upright.restart();
+					downright.restart();
+				}
+				else
+				{
+					sprite = upright;
+					sprite.stopAt(1);
+					directionrnd = 6;
+					direction="upright";
+					down.restart();
+					left.restart();
+					right.restart();
+					upleft.restart();
+					downleft.restart();
+					downright.restart();
+				}
+			}
+			
 		else
 		{
 			sprite = idle;
@@ -209,5 +306,5 @@ public class Sentry extends Mob {
 			},2000);
 		}
 	}
-
+	}
 }

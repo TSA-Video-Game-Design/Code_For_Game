@@ -14,27 +14,37 @@ public class Nurse extends Mob {
 		float j;
 		double magnitude;
 		int healtimer;
+		double angle;
 	public Nurse(float myx, float myy) throws SlickException 
 	{
 		hp=40;
 		maxhp=hp;
 		healtimer = 0;
-		image=new Image ("res/Nurse Down 1.png");
+		image=new Image ("res/Nurse/Nurse 1.png");
 		target = null;
-		direction="Down";
+		direction="down";
 		seePlayer=false;
+		angle=0;
 		x=myx;
 		y=myy;
 		canMoveX=true;
 		canMoveY=true;
-		Image[] upA= {new Image("res/Nurse Up 1.png")};
-		Image[] downA= {new Image("res/Nurse Down 1.png")};
-		Image[] leftA= {new Image("res/Nurse Left 1.png")};
-		Image[] rightA= {new Image("res/Nurse Right 1.png")};
+		Image[] upA= {new Image("res/Nurse/Nurse B.png")};
+		Image[] downA= {new Image("res/Nurse/Nurse 1.png")};
+		Image[] leftA= {new Image("res/Nurse/Nurse L.png")};
+		Image[] rightA= {new Image("res/Nurse/Nurse R.png")};
+		Image[] upleftA= {new Image("res/Nurse/Nurse BL.png")};
+		Image[] uprightA= {new Image("res/Nurse/Nurse BR.png")};
+		Image[] downleftA= {new Image("res/Nurse/Nurse FL.png")};
+		Image[] downrightA= {new Image("res/Nurse/Nurse FR.png")};
 		left = new Animation(leftA,100,true);
 		right = new Animation(rightA,100,true);
 		up = new Animation(upA,100,true);
 		down = new Animation(downA,100,true);
+		upleft = new Animation(upleftA,100,true);
+		upright = new Animation(uprightA,100,true);
+		downleft = new Animation(downleftA,100,true);
+		downright = new Animation(downrightA,100,true);
 		sprite = down;
 		
 	}
@@ -113,6 +123,62 @@ public class Nurse extends Mob {
 					x = (float) (x + ((i/magnitude)*3));
 				if(canMoveY)
 					y = (float) (y + ((j/magnitude)*3));
+				angle= Math.atan(j/i);
+				if (((angle < Math.PI * 3 / -8) && (angle >= Math.PI / -2))
+						|| ((angle >= Math.PI * 3 / 8) && (angle <= Math.PI / 2))) {
+					if(player.y+32>y)
+					{
+						sprite = up;
+						direction="up";
+					}
+					else
+					{
+						sprite = down;
+						direction="down";
+					}
+				}
+				// Left Right
+				else
+				if ((angle < Math.PI / 8) && (angle > Math.PI / -8)) {
+					if(player.x+32>x)
+					{
+						sprite = left;
+						direction="left";
+					}
+					else
+					{
+						sprite =right;
+						direction="right";
+					}
+				}
+				// UpLeft DownRight
+				else
+				if ((angle > Math.PI / 8) && (angle < Math.PI * 3 / 8)) {
+					if(player.y+32>y)
+					{
+						sprite = upleft;
+						direction="upleft";
+					}
+					else
+					{
+						sprite = downright;
+						direction="downright";
+					}
+				}
+				// UpRight DownLeft
+				else
+				if ((angle > Math.PI * 3 / -8) && (angle < Math.PI / -8)) {
+					if(player.y+32>y)
+					{
+						sprite = upright;
+						direction="upright";
+					}
+					else
+					{
+						sprite = downleft;
+						direction="downleft";
+					}
+				}
 			}
 			
 		}
@@ -183,9 +249,9 @@ public class Nurse extends Mob {
 				}
 			}
 			if(canMoveX)
-				x = (float) (x + ((i/magnitude)*3));
+				x = (float) (x + ((i/magnitude)*2.5));
 			if(canMoveY)
-				y = (float) (y + ((j/magnitude)*3));
+				y = (float) (y + ((j/magnitude)*2.5));
 			//Graphical Heal effect
 			if(healtimer >= 5)
 			{
@@ -195,7 +261,65 @@ public class Nurse extends Mob {
 			}
 			else
 				healtimer++;		
+			angle= Math.atan(j/i);
+			if (((angle < Math.PI * 3 / -8) && (angle >= Math.PI / -2))
+					|| ((angle >= Math.PI * 3 / 8) && (angle <= Math.PI / 2))) {
+				if(player.y+32>y)
+				{
+					sprite = down;
+					direction="down";
+				}
+				else
+				{
+					sprite = up;
+					direction="up";
+				}
+			}
+			// Left Right
+			else
+			if ((angle < Math.PI / 8) && (angle > Math.PI / -8)) {
+				if(player.x+32>x)
+				{
+					sprite =right;
+					direction="right";
+				}
+				else
+				{
+					sprite = left;
+					direction="left";
+				}
+			}
+			// UpLeft DownRight
+			else
+			if ((angle > Math.PI / 8) && (angle < Math.PI * 3 / 8)) {
+				if(player.y+32>y)
+				{
+					sprite = downright;
+					direction="downright";
+				}
+				else
+				{
+					sprite = upleft;
+					direction="upleft";
+				}
+			}
+			// UpRight DownLeft
+			else
+			if ((angle > Math.PI * 3 / -8) && (angle < Math.PI / -8)) {
+				if(player.y+32>y)
+				{
+					sprite = downleft;
+					direction="downleft";
+				}
+				else
+				{
+					sprite = upright;
+					direction="upright";
+				}
+			}
 		}
+		
+		/*
 		if(Math.abs(i)>Math.abs(j))
 		{
 			if(i<0)
@@ -209,7 +333,7 @@ public class Nurse extends Mob {
 				sprite = down;
 			else
 				sprite = up;
-		}
+		}*/
 	}
 	
 }

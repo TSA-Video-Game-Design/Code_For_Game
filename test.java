@@ -32,10 +32,14 @@ public class test extends BasicGame implements MusicListener {
 	ArrayList<Mob> mobs = new ArrayList<Mob>();
 	ArrayList<Medkit> medkits = new ArrayList<Medkit>();
 	ArrayList<Explosion> explosions = new ArrayList<Explosion>();
+	ArrayList<Pickup> pickups = new ArrayList<Pickup>();
 	int x, y;
 	boolean titleScreen = false;
 	boolean menu;
 	boolean inv = false;
+	boolean firstgun = true;
+	boolean firstsword = true;
+	boolean firstshield =true;
 	TrueTypeFont ttf;
 	static int level;
 	int mapShiftx = 840;
@@ -107,6 +111,10 @@ public class test extends BasicGame implements MusicListener {
 			for (Medkit meds : medkits) {
 				meds.image.draw(meds.x, meds.y);
 			}
+			for (Pickup picky : pickups)
+			{
+				picky.image.draw(picky.x,picky.y,(float).5);
+			}
 			for (Mob moby : mobs) {
 				if ((moby instanceof Drone) && (!((Drone) moby).canExplode))
 					moby.sprite.draw(moby.x, moby.y, new Color(80, 80, 80));
@@ -116,6 +124,7 @@ public class test extends BasicGame implements MusicListener {
 							240 - (((Drone) moby).timer * 4)));
 				else
 					moby.sprite.draw(moby.x, moby.y);
+				
 			}
 			for (Explosion explosive : explosions) {
 				explosive.sprite.draw(explosive.x, explosive.y);
@@ -185,6 +194,7 @@ public class test extends BasicGame implements MusicListener {
 		x = 0;
 		y = 0;
 		timey = 0;
+		
 		pasta = false;
 		HUD = new Image("res/Video Game Tiles - Pixel by Pixel/HUD.png");
 		health = new Image("res/health/20hp.png");
@@ -192,7 +202,7 @@ public class test extends BasicGame implements MusicListener {
 				"res/Video Game Tiles - Pixel by Pixel/Inventory.png");
 		item1 = new Image(
 				"res/Video Game Tiles - Pixel by Pixel/Screwdriver.png");
-		item2 = new Image("res/Video Game Tiles - Pixel by Pixel/laser gun.png");
+		item2 = new Image("res/Blank.png");
 		titleDoor1 = new Image(
 				"res/Video Game Tiles - Pixel by Pixel/Top TL.png");
 		titleDoor2 = new Image(
@@ -226,8 +236,8 @@ public class test extends BasicGame implements MusicListener {
 			goodMusic = new Music("res/music/LightHart.wav");
 			goodMusic.addListener(this);
 			goodMusic.loop();
-			layers = 4;
-			enemyLayer = 4;
+			layers = 6;
+			enemyLayer = 6;
 			break;
 		case 2:
 			enemyLayer = 0;
@@ -235,6 +245,8 @@ public class test extends BasicGame implements MusicListener {
 			layers = 4;
 			goodMusic = new Music("res/music/LightHart.wav");
 			goodMusic.loop();
+			layers = 9;
+			enemyLayer = 9;
 			break;
 		case 3:
 			grassMap = new TiledMap("res/Level 3.tmx");
@@ -405,6 +417,26 @@ public class test extends BasicGame implements MusicListener {
 							new Image[] { new Image(
 									"res/Video Game Tiles - Pixel by Pixel/Right A1.png") },
 							1, false);
+				else if (player.direction.equals("upright"))
+					player.sprite = new Animation(
+							new Image[] { new Image(
+									"res/Character Sprite/Movement/Back_Right 1.png") },
+							1, false);
+				else if (player.direction.equals("downright"))
+					player.sprite = new Animation(
+							new Image[] { new Image(
+									"res/Character Sprite/Movement/Front_Right 1.png") },
+							1, false);
+				else if (player.direction.equals("upleft"))
+					player.sprite = new Animation(
+							new Image[] { new Image(
+									"res/Character Sprite/Movement/Back_Left 1.png") },
+							1, false);
+				else if (player.direction.equals("downleft"))
+					player.sprite = new Animation(
+							new Image[] { new Image(
+									"res/Character Sprite/Movement/Front_Left 1.png") },
+							1, false);
 				player.sprite.update(arg1);
 				// updates for list of stuff
 				for (int i = 0; i < mobs.size(); i++) {
@@ -416,8 +448,17 @@ public class test extends BasicGame implements MusicListener {
 						mobs.get(i).dropHP(.4, medkits);
 						explosions.add(new Explosion(mobs.get(i).x,
 								mobs.get(i).y));
+						if((mobs.get(i) instanceof Sentry)&&(firstgun))
+						{
+							mobs.get(i).dropGun(pickups);
+							firstgun=false;
+						}
+						if((mobs.get(i) instanceof Meleebot)&&(firstsword))
+						{
+							mobs.get(i).dropSword(pickups);
+							firstsword=false;
+						}
 						mobs.remove(i);
-						// EXPLOSION!
 					}
 				}
 				for (int i = 0; i < explosions.size(); i++) {
@@ -449,6 +490,10 @@ public class test extends BasicGame implements MusicListener {
 				for (int i = 0; i < medkits.size(); i++) {
 					medkits.get(i).update(player, i, medkits);
 				}
+				for (int i = 0; i<pickups.size();i++)
+				{
+					pickups.get(i).update(player,i,pickups);
+				}
 				if (input.isKeyDown(Input.KEY_A)) {
 					if (player.swinging == false) {
 						player.direction = "left";
@@ -456,27 +501,65 @@ public class test extends BasicGame implements MusicListener {
 						player.sprite = player.left;
 						player.sprite.update(arg1);
 					}
-				} else if (input.isKeyDown(Input.KEY_D)) { // right
+				}  if (input.isKeyDown(Input.KEY_D)) { // right
 					if (player.swinging == false) {
 						player.direction = "right";
 						collisionCheck(-4, 0, "left");
 						player.sprite = player.right;
 						player.sprite.update(arg1);
 					}
-				} else if (input.isKeyDown(Input.KEY_W)) { // up
+				}  if (input.isKeyDown(Input.KEY_W)) { // up
 					if (player.swinging == false) {
 						player.direction = "up";
 						collisionCheck(0, 4, "down");
 						player.sprite = player.up;
 						player.sprite.update(arg1);
 					}
-				} else if (input.isKeyDown(Input.KEY_S)) { // down
+				}  if (input.isKeyDown(Input.KEY_S)) { // down
 					if (player.swinging == false) {
 						player.direction = "down";
 						collisionCheck(0, -4, "up");
 						player.sprite = player.down;
 						player.sprite.update(arg1);
 					}
+				}
+				if ((input.isKeyDown(Input.KEY_S))&&(input.isKeyDown(Input.KEY_A)))
+				{
+					player.sprite=player.upleft;
+					player.sprite.update(arg1);
+					player.direction=("downleft");
+				}
+				if ((input.isKeyDown(Input.KEY_S))&&(input.isKeyDown(Input.KEY_D)))
+				{
+					player.sprite=player.upright;
+					player.sprite.update(arg1);
+					player.direction=("downright");
+				}
+				if ((input.isKeyDown(Input.KEY_W))&&(input.isKeyDown(Input.KEY_A)))
+				{
+					player.sprite=player.downleft;
+					player.sprite.update(arg1);
+					player.direction=("upleft");
+				}
+				if ((input.isKeyDown(Input.KEY_W))&&(input.isKeyDown(Input.KEY_D)))
+				{
+					player.sprite=player.downright;
+					player.sprite.update(arg1);
+					player.direction=("upright");
+				}
+				if((input.isKeyDown(Input.KEY_W))||(input.isKeyDown(Input.KEY_A))||(input.isKeyDown(Input.KEY_S))||(input.isKeyDown(Input.KEY_D)))
+				{
+					if (steptimer >= 17) {
+						steptimer = 0;
+						if (stepSwitch) {
+							step1.play();
+							stepSwitch = false;
+						} else {
+							step2.play();
+							stepSwitch = true;
+						}
+					} else
+						steptimer++;
 				}
 				if (input.isMousePressed(0)) {
 					slide = false;
@@ -506,6 +589,10 @@ public class test extends BasicGame implements MusicListener {
 										player.stabUpScrew, time1, false);
 								player.stabD = new Animation(
 										player.stabDownScrew, time1, false);
+								player.stabUL = new Animation(player.stabUpLeftScrew,200,false);
+								player.stabUR = new Animation(player.stabUpRightScrew,200,false);
+								player.stabDL = new Animation(player.stabDownLeftScrew,200,false);
+								player.stabDR = new Animation(player.stabDownRightScrew,200,false);
 
 								for (Mob moby : mobs) {
 									if (player.meleeRange(moby, 128)) {
@@ -517,7 +604,6 @@ public class test extends BasicGame implements MusicListener {
 								}
 							} else if (player.getWeapon1().equals("saber")) {
 								sabersfx.play();
-
 								player.stabL = new Animation(
 										player.stabLeftSaber, time2, true);
 								player.stabR = new Animation(
@@ -526,7 +612,10 @@ public class test extends BasicGame implements MusicListener {
 										player.stabUpSaber, time2, true);
 								player.stabD = new Animation(
 										player.stabDownSaber, time2, true);
-
+								player.stabUL = new Animation(player.stabUpLeftSaber,200,false);
+								player.stabUR = new Animation(player.stabUpRightSaber,200,false);
+								player.stabDL = new Animation(player.stabDownLeftSaber,200,false);
+								player.stabDR = new Animation(player.stabDownRightSaber,200,false);
 								for (Mob moby : mobs) {
 									if (player.meleeRange(moby, 128)) {
 										moby.hurt(20);
@@ -543,22 +632,47 @@ public class test extends BasicGame implements MusicListener {
 										1000, true);
 								player.stabD = new Animation(player.shootDown,
 										1000, true);
+								player.stabUL = new Animation(player.shootUpLeft,200,false);
+								player.stabUR = new Animation(player.shootUpRight,200,false);
+								player.stabDL = new Animation(player.shootDownLeft,200,false);
+								player.stabDR = new Animation(player.shootDownRight,200,false);
 								lasersfx.play();
 								if (player.direction.equals("left")) {
 									projectiles.add(new Projectile(player.x,
-											player.y + 35, 0, 0, true));
+											player.y + 35, -1000,
+											player.y + 35, true));
 								} else if (player.direction.equals("right")) {
 									projectiles.add(new Projectile(
 											player.x + 45, player.y + 35, 1000,
-											1, true));
+											player.y + 35, true));
 								} else if (player.direction.equals("up")) {
 									projectiles.add(new Projectile(
-											player.x + 45, player.y + 35, 1000,
-											-1000, true));
+											player.x + 45, player.y + 35,
+											player.x + 45, -1000, true));
 								} else if (player.direction.equals("down")) {
 									projectiles.add(new Projectile(
-											player.x + 15, player.y + 35, 1000,
-											1000, true));
+											player.x + 15, player.y + 35,
+											player.x + 15, 1000, true));
+								} else if (player.direction.equals("upleft")) {
+									projectiles.add(new Projectile(
+											player.x + 17, player.y + 30,
+											player.x + 17 - 1000,
+											player.y + 30 - 1000, true));
+								} else if (player.direction.equals("upright")) {
+									projectiles.add(new Projectile(
+											player.x + 44, player.y + 30,
+											player.x + 44 + 1000,
+											player.y + 30 - 1000, true));
+								} else if (player.direction.equals("downleft")) {
+									projectiles.add(new Projectile(
+											player.x + 2, player.y + 43,
+											player.x + 2 - 1000,
+											player.y + 43 + 1000, true));
+								} else if (player.direction.equals("downright")) {
+									projectiles.add(new Projectile(
+											player.x + 61, player.y + 43,
+											player.x + 61 + 1000,
+											player.y + 43 + 1000, true));
 								}
 							}
 							player.swinging = true;
@@ -585,7 +699,10 @@ public class test extends BasicGame implements MusicListener {
 									time1, false);
 							player.stabD = new Animation(player.stabDownScrew,
 									time1, false);
-
+							player.stabUL = new Animation(player.stabUpLeftScrew,200,false);
+							player.stabUR = new Animation(player.stabUpRightScrew,200,false);
+							player.stabDL = new Animation(player.stabDownLeftScrew,200,false);
+							player.stabDR = new Animation(player.stabDownRightScrew,200,false);
 							for (Mob moby : mobs) {
 								if (player.meleeRange(moby, 128)) {
 									moby.hurt(10);
@@ -596,7 +713,6 @@ public class test extends BasicGame implements MusicListener {
 							}
 						} else if (player.getWeapon2().equals("saber")) {
 							sabersfx.play();
-
 							player.stabL = new Animation(player.stabLeftSaber,
 									time2, true);
 							player.stabR = new Animation(player.stabRightSaber,
@@ -605,7 +721,10 @@ public class test extends BasicGame implements MusicListener {
 									time2, true);
 							player.stabD = new Animation(player.stabDownSaber,
 									time2, true);
-
+							player.stabUL = new Animation(player.stabUpLeftSaber,200,false);
+							player.stabUR = new Animation(player.stabUpRightSaber,200,false);
+							player.stabDL = new Animation(player.stabDownLeftSaber,200,false);
+							player.stabDR = new Animation(player.stabDownRightSaber,200,false);
 							for (Mob moby : mobs) {
 								if (player.meleeRange(moby, 128)) {
 									moby.hurt(20);
@@ -622,19 +741,47 @@ public class test extends BasicGame implements MusicListener {
 									false);
 							player.stabD = new Animation(player.shootDown,
 									5000, false);
+							player.stabUL = new Animation(player.shootUpLeft,200,false);
+							player.stabUR = new Animation(player.shootUpRight,200,false);
+							player.stabDL = new Animation(player.shootDownLeft,200,false);
+							player.stabDR = new Animation(player.shootDownRight,200,false);
 							lasersfx.play();
 							if (player.direction.equals("left")) {
 								projectiles.add(new Projectile(player.x,
-										player.y + 35, 0, 0, true));
+										player.y + 35, -1000,
+										player.y + 35, true));
 							} else if (player.direction.equals("right")) {
-								projectiles.add(new Projectile(player.x + 45,
-										player.y + 35, 1000, 1, true));
+								projectiles.add(new Projectile(
+										player.x + 45, player.y + 35, 1000,
+										player.y + 35, true));
 							} else if (player.direction.equals("up")) {
-								projectiles.add(new Projectile(player.x + 45,
-										player.y + 35, 1000, -1000, true));
+								projectiles.add(new Projectile(
+										player.x + 45, player.y + 35,
+										player.x + 45, -1000, true));
 							} else if (player.direction.equals("down")) {
-								projectiles.add(new Projectile(player.x + 15,
-										player.y + 35, 1000, 1000, true));
+								projectiles.add(new Projectile(
+										player.x + 15, player.y + 35,
+										player.x + 15, 1000, true));
+							} else if (player.direction.equals("upleft")) {
+								projectiles.add(new Projectile(
+										player.x + 17, player.y + 30,
+										player.x + 17 - 1000,
+										player.y + 30 - 1000, true));
+							} else if (player.direction.equals("upright")) {
+								projectiles.add(new Projectile(
+										player.x + 44, player.y + 30,
+										player.x + 44 + 1000,
+										player.y + 30 - 1000, true));
+							} else if (player.direction.equals("downleft")) {
+								projectiles.add(new Projectile(
+										player.x + 2, player.y + 43,
+										player.x + 2 - 1000,
+										player.y + 43 + 1000, true));
+							} else if (player.direction.equals("downright")) {
+								projectiles.add(new Projectile(
+										player.x + 61, player.y + 43,
+										player.x + 61 + 1000,
+										player.y + 43 + 1000, true));
 							}
 						}
 						player.swinging = true;
@@ -694,14 +841,14 @@ public class test extends BasicGame implements MusicListener {
 							item1 = new Image(
 									"res/Video Game Tiles - Pixel by Pixel/Screwdriver.png");
 						}
-						if (item2Button.contains(input.getMouseX(),
-								input.getMouseY())) {
+						if ((item2Button.contains(input.getMouseX(),
+								input.getMouseY()))&&(!firstsword)) {
 							player.setWeapon1("saber");
 							item1 = new Image(
 									"res/Video Game Tiles - Pixel by Pixel/Energy Saber.png");
 						}
-						if ((item3Button.contains(input.getMouseX(),
-								input.getMouseY()))) {
+						if (((item3Button.contains(input.getMouseX(),
+								input.getMouseY())))&&(!firstgun)) {
 							player.setWeapon1("energy gun");
 							item1 = new Image(
 									"res/Video Game Tiles - Pixel by Pixel/Laser Gun.png");
@@ -713,14 +860,14 @@ public class test extends BasicGame implements MusicListener {
 							item2 = new Image(
 									"res/Video Game Tiles - Pixel by Pixel/Screwdriver.png");
 						}
-						if (item2Button.contains(input.getMouseX(),
-								input.getMouseY())) {
+						if ((item2Button.contains(input.getMouseX(),
+								input.getMouseY()))&&(!firstsword)) {
 							player.setWeapon2("saber");
 							item2 = new Image(
 									"res/Video Game Tiles - Pixel by Pixel/Energy Saber.png");
 						}
-						if ((item3Button.contains(input.getMouseX(),
-								input.getMouseY()))) {
+						if (((item3Button.contains(input.getMouseX(),
+								input.getMouseY())))&&(!firstgun)) {
 							player.setWeapon2("energy gun");
 							item2 = new Image(
 									"res/Video Game Tiles - Pixel by Pixel/Laser Gun.png");
@@ -747,29 +894,41 @@ public class test extends BasicGame implements MusicListener {
 
 	public void collisionCheck(int x1, int y1, String direction)
 			throws SlickException {
-
-		for (Wall wally : walls) {
-			wally.collision(player);
-		}
-		ArrayList<Boolean> cantMove = new ArrayList<Boolean>();
-		for (Wall wally : walls) {
-			if (direction.equals("right")) {
-				cantMove.add(wally.cannotMoveRight == false);
-			} else if (direction.equals("left")) {
-				cantMove.add(wally.cannotMoveLeft == false);
-			} else if (direction.equals("up")) {
-				cantMove.add(wally.cannotMoveUp == false);
-			} else if (direction.equals("down")) {
-				cantMove.add(wally.cannotMoveDown == false);
+		//wall moves, player stationary
+		
+		for(Wall wally: walls)
+		{
+			Rectangle box = new Rectangle(player.x,player.y,player.image.getWidth(),player.image.getHeight());
+			if(direction.equals("left"))
+			{//<-
+				boolean a=(box.contains(wally.x-4,wally.y));
+				boolean b=(box.contains(wally.x-4,wally.y+wally.image.getHeight()));
+				if(a||b)
+					x1=0;
 			}
-
-		}
-		for (boolean x : cantMove) {
-			if (x == false) {
-				pasta = false;
+			else if(direction.equals("right"))
+			{
+				boolean a=(box.contains(wally.x+wally.image.getWidth()+4,wally.y));
+				boolean b=(box.contains(wally.x+wally.image.getWidth()+4,wally.y+wally.image.getHeight()));
+				if(a||b)
+					x1=0;
 			}
+			else if(direction.equals("up"))
+			{
+				boolean a=(box.contains(wally.x,wally.y-4));
+				boolean b=(box.contains(wally.x+wally.image.getWidth(),wally.y-4));
+				if(a||b)
+					y1=0;
+			}
+			else if(direction.equals("down"))
+			{
+				boolean a=(box.contains(wally.x,wally.y+wally.image.getHeight()+4));
+				boolean b=(box.contains(wally.x+wally.image.getWidth(),wally.y+wally.image.getHeight()+4));
+				if(a||b)
+					y1=0;
+			}
+			
 		}
-		if (pasta == true) {
 			// TODO Keep adding the things on the screen as we make more stuff
 			x += x1;
 			y += y1;
@@ -791,18 +950,12 @@ public class test extends BasicGame implements MusicListener {
 				meds.x += x1;
 				meds.y += y1;
 			}
-			if (steptimer >= 17) {
-				steptimer = 0;
-				if (stepSwitch) {
-					step1.play();
-					stepSwitch = false;
-				} else {
-					step2.play();
-					stepSwitch = true;
-				}
-			} else
-				steptimer++;
-		}
+			for (Pickup picky: pickups)
+			{
+				picky.x += x1;
+				picky.y += y1;
+			}
+		
 
 	}
 

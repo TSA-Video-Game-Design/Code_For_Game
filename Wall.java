@@ -2,9 +2,11 @@ package rpg;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 
 public class Wall extends Entity{
 	String type;
+	Rectangle rect;
 	public Wall(float myx, float myy, String myType) throws SlickException
 	{
 		super();
@@ -16,6 +18,8 @@ public class Wall extends Entity{
 		image = new Image("res/Video Game Tiles - Pixel by Pixel/block.png");
 		isSolid=true;
 		//if (myType.equals("water")) image = new Image("res/")
+		rect = new Rectangle(x,y,this.image.getWidth(),this.image.getHeight());
+
 	}
 	public Wall(float myx, float myy) throws SlickException
 	{

@@ -20,6 +20,7 @@ public class Player extends Entity {
     public String weapon2 = "screw driver";
     public boolean canAttack = true;
     public boolean swinging;
+    Rectangle rect;
     public boolean shieldOut = false;
     public Image[] leftA = {new Image("res/Video Game Tiles - Pixel by Pixel/Left A1.png"), new Image("res/Video Game Tiles - Pixel by Pixel/Left A2.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left A3.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left A4.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left B1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left B2.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left B3.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left B4.png")};
     public Image[] rightA = {new Image("res/Video Game Tiles - Pixel by Pixel/Right A1.png"), new Image("res/Video Game Tiles - Pixel by Pixel/Right A2.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Right A3.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Right A4.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Right B1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Right B2.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Right B3.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Right B4.png")};
@@ -75,7 +76,7 @@ public class Player extends Entity {
     {
     	image = new Image("res/Video Game Tiles - Pixel by Pixel/playerft1.png");
     	hurtsfx=new Sound("res/sound/Hit.wav");
-		
+    	rect= new Rectangle(x, y, 64, 64);
 		//int[] time1= {300,300,300,300,300,300};
 		int time1=100;
 		int time2=300;

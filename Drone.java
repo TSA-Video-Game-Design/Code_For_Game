@@ -16,10 +16,10 @@ public class Drone extends Mob{
 	boolean canExplode;
 	int enabletimer;
 	public Drone(float myx, float myy) throws SlickException 
-	{
+	{  
 		hp = 60;
 		maxhp=hp;
-		image = new Image("res/Drone/Drone/Drone F.png");
+		image = new Image("res/Drone/Drone//Drone F.png");
 		direction = "down";
 		seePlayer=false;
 		x=myx;

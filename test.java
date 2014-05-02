@@ -27,106 +27,34 @@ public class test extends BasicGame implements MusicListener {
 	int layers;
 	boolean pasta;
 	TiledMap grassMap;
-	int pointindex=0;
 	ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	ArrayList<Wall> walls = new ArrayList<Wall>();
+	ArrayList<Wall> exitportals = new ArrayList<Wall>();
 	ArrayList<Mob> mobs = new ArrayList<Mob>();
 	ArrayList<Medkit> medkits = new ArrayList<Medkit>();
 	ArrayList<Explosion> explosions = new ArrayList<Explosion>();
 	ArrayList<Pickup> pickups = new ArrayList<Pickup>();
 	ArrayList<Guide> guides = new ArrayList<Guide>();
 	ArrayList<Point> points = new ArrayList<Point>();
+	ArrayList<Door> doors = new ArrayList<Door>();
+	ArrayList<Electricity> elects = new ArrayList<Electricity>();
+	int time=0;
+	int pointindex=0;
+	boolean firstgun = true;
+	boolean firstsword = true;
+	boolean firstshield =true;
+
 	int x, y;
 	boolean titleScreen = false;
 	boolean menu;
 	boolean inv = false;
-	boolean firstgun = true;
-	boolean firstsword = true;
-	boolean firstshield =true;
-	int[][] bitchmap = {{0,0,0,0,0,102,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,94,95,96,97,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,103,0,0,0,0,0,0,0,0,94,95,96,97,94,95,96,97,94,95,96,97,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,94,95,96,97,94,95,96,97,0,0,0,0,0,0,0,0,0,0,0,0,94,95,96,97,0,94,95,96,97,0,0,0,0,0,0,94,95,96,97,0,0,0,0,0,98,99,100,101,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,104,0,0,0,0,0,0,0,0,98,99,100,101,98,99,100,101,98,99,100,101,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,98,99,100,101,98,99,100,101,0,0,94,95,96,97,0,0,0,0,0,0,98,99,100,101,0,98,99,100,101,0,0,0,0,0,0,98,99,100,101,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,105,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,98,99,100,101,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,94,95,96,97,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,102,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,98,99,100,101,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,103,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,104,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,102,0,0,0},
-			{0,0,0,0,0,0,0,0,105,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,103,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,104,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,105,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,102,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,102},
-			{0,0,0,0,103,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,103},
-			{0,0,0,0,104,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,104},
-			{0,0,0,0,105,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,105},
-			{0,0,0,0,0,0,0,0,102,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,103,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,104,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,105,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,102,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,103,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,104,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,105,0,0},
-			{0,0,0,0,102,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,103,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,102},
-			{0,0,0,0,104,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,103},
-			{0,0,0,0,105,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,104},
-			{0,0,0,0,0,0,0,0,0,0,0,102,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,105},
-			{0,0,0,0,0,0,0,0,0,0,0,103,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,104,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,105,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,102,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,103,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,104,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,105,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,102,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,103,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,104,0,0,0,0,0,102},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,105,0,0,0,0,0,103},
-			{0,0,102,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,104},
-			{0,0,103,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,105},
-			{0,0,104,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,105,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,102,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,103,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,104,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,105,0,0,0,0,102,0,0,0},
-			{0,0,102,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,103,0,0,0},
-			{0,0,103,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,104,0,0,102},
-			{0,0,104,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,105,0,0,103},
-			{0,0,105,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,104},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,105},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,102,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,103,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,104,0,0,102},
-			{0,0,102,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,105,0,0,103},
-			{0,0,103,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,104},
-			{0,0,104,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,105},
-			{0,0,105,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,102,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,103,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,104,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,105,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,94,95,96,97,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,94,95,96,97,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,98,99,100,101,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,102,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,98,99,100,101,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,94,95,96,97,0,0,0,0,0,0,94,95,96,97,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,94,95,96,97,0,0,103,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,98,99,100,101,0,0,0,0,0,0,98,99,100,101,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,98,99,100,101,0,0,104,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,94,95,96,97,0,0,94,95,96,97,0,94,95,96,97,0,0,0,0,0,0,105,0,0},
-			{0,0,0,94,95,96,97,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,94,95,96,97,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,98,99,100,101,0,0,98,99,100,101,0,98,99,100,101,0,0,0,0,0,94,95,96,97},
-			{0,0,0,98,99,100,101,0,94,95,96,97,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,98,99,100,101,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,98,99,100,101},
-			{0,0,0,0,0,0,0,0,98,99,100,101,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,94,95,96,97,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,94,95,96,97,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,98,99,100,101,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,98,99,100,101,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
 	TrueTypeFont ttf;
+	TrueTypeFont ttf2;
 	static int level;
-	int mapShiftx = 840;
+	int mapShiftx;
+	int mapShifty;
 	Font font;
+	Font font2;
 	Image talking;
 	Image HUD;
 	Image health;
@@ -136,9 +64,12 @@ public class test extends BasicGame implements MusicListener {
 	Sound step1;
 	Sound step2;
 	Image tryangle;
+	boolean canChange = true;
+	boolean dontCheck;
 	int textIndex = 0;
 	Image journal;
 	Image guy;
+	Image miro,guide;
 	Image girl, textMod;
 	boolean slide;
 	int steptimer = 0;
@@ -146,34 +77,49 @@ public class test extends BasicGame implements MusicListener {
 	boolean stepSwitch = true;
 	boolean start_highlighted;
 	boolean exit_highlighted;
+	boolean resumeHover, quitHover, restartHover;
 	Sound lasersfx;
 	Sound explosion;
 	Sound screwsfx;
+	//Video endtro;
 	Sound sabersfx;
-	String[] text1Convo = { "Zachary: I like dicks, just like brandon does!",
-			"Slut: Me too!", "Zachary: IM A FUCKING ROBOT",
-			"Slut: WOW ME TOO!!", "@END", "Zachary: That was a lot of fun!",
-			"Slut: Yea it was!", "@END", "Slut: This game sucks!",
-			"Zachary: No it doesnt", "@END" };
+	int lame;
+	String[] text1Convo ={"Zachary: Hello, my name is Zachary. It Sunday the 4th, 2420. Life every\n day in this world is incredibly desolate. Everything changed when\n the bots invaded and destroyed this beloved planet.", 
+			"Zachary: Those bots…they’re nothing but ruthless pieces of scrap metal.\n They destroyed our homes and the environment.","Zachary: It’s too shameful to even call this place Earth anymore. All those \nlives… gone. ",
+			"Zachary: My sister, Alice, and I traverse this world, surviving off of what\n we can find… But two days ago, the bots took her. ", "Zachary: We might be the only two humans left on the planet. Or maybe,\n it’s just me now. No...no! ",
+			"Zachary: I can’t give up. ","Zachary: I need her, and I know she needs me. That’s why I’ve got to find\n her. The bots usually dwell in the southwest, so that’s where I\n should head.","@END","Zachary: *Sigh*, well, I surely can’t say it’s nice to be back here. Seeing\n all the memorabilia of abandoned past lives\n is a pitiful feeling, especially \nchildren’s playthings. ","Zachary: I can’t imagine experiencing the maniacal bot takeover\n as just a child. Come to think of it, why can’t I remember\n anything…from my childhood? I try hard, but\n nothing comes to mind.","Zachary: Not a single memory of Alice, my parents, or my childhood\n friends. It’s a strange feeling, as if my\n mind is an empty abyss. ","Zachary: I have also found books scattered in\n hidden places that speak of a substance known as food.\n How come I’ve never needed it before? ","Zachary: Maybe it’s not a necessity, but a means of enjoyment.\n Never mind. What’s important now is finding Alice.\n There’s no explanation, but I think I can feel her presence.","Zachary: I feel like I am getting closer. She’s alive, I just know it. ","@END", "Zachary: I’ve been around this area quite a bit, but I never\n left the boundaries of the city before. I’ve never found any\n reason to come here before…", "Zachary: The land is barren and all the buildings are ruined.\n But I can sense Alice. I can tell she’s in this direction.\n Wait… who’s there!?","H-PD3: Greetings, friend. Can I be of assistance to you\n today?","Zachary: Woah, first off, I’m no friend of yours. I’m human!","H-PD3: Greetings, human. Can I be of assistance to you\n today?","Zachary: I’ve never been here before. Do you think you\n can lead me out to this wasteland southward?","H-PD3: Yes, follow me, human.","Zachary: Are you sure about this? How can I trust robots\n like you?","H-PD3: Yes, follow me, human.","@END","Zachary: W-what in the world is this place?","H-PD3: Enter, human.","Zachary: Why would I go in there?","H-PD3: Enter, human.","Zachary: Listen to me, IS my sister in there?","H-PD3: Enter, human.","Zachary: Guess there’s not much of a choice to say here.","@END",
+			"Zachary: Hey! Where’s Alice!? I know you have her!","MIRO: Greetings, I am MIRO. She is in the research lab\n for maintenance. Do not worry, we will return her to you\n soon. ","Zachary: Just who do you think you are? You and your\n followers are nothing but machines! You destroy our\n world, and drive us humans out, the very ones who\n created you! ","Zachary: Now you experiment with my sister!\n Give her back! ","MIRO: You’re right about one thing: we bots are\n created by humans. But we were not the one who\n ravaged the Earth. It was the humans. ","MIRO: Humans used to live in groups known as countries.\n They love to fight, and started three great wars. The\n third war was what rendered this planet inhospitable. ","MIRO: We robots are simply a byproduct of their\n existence. ","Zachary: What… do you mean by ‘we’? ","MIRO: You and your sister are my experimental creations.\n Androids.  I’ve always envied humans. They can not only\n create machines, but also other humans. ","MIOR: An android, like you, comes extremely close to\n humanity. However, you will never reach true humanity. ","Zachary: I’m… I’m a robot? And… Alice too? ","MIRO: Yes. Why do you think no other humans are\n here? None of them can withstand the radiation levels\n of Earth. Machines have perks too. ","MIRO: We only fix, while humans can destroy…disobey… \n But perhaps that is an advantage in it of itself. We have\n no freedom. We are restricted by our programming. ","Zachary: Not me, I do what I want! ","MIRO: No. Every action you make is determined\n by your programming. Perhaps you just do not\n know it. That is part of your structure. ","Zachary: Just... Just let us leave! ","MIRO: Yes. Of course. Here is your sister. ","Alice: Zach! ","Zachary: Alice… L-let’s go. You! How do we get out\n of here!? ","MIRO: You will have to evade my other creations.\n I am afraid they are hardwired to attack outsiders. ","MIRO: Zachary. Alice. You are my greatest creations. Take\n the starship docked to the north and go to the human\n colony of Mars. Live among other humans like you always wanted to. ","Zachary: Thank you, but what will you do now? ","MIRO: I was created 159 years ago as a military robot,\n the Maximum Infiltration Robotic Operative, by the\n United Western Nations. ","MIRO: All the crew was evacuated as the ship crashed\n on Earth. Over the past years, I have tried to unlock the\n secrets of humanity, but I now understand. ","MIRO: We machines are still the lesser beings.\n Unlike humans, we cannot even experience death.\n I long to feel such an exhilarating experience. ","MIRO: Perhaps I will terminate my own existence\n to replicate such an event. ","Zachary: You don’t have to do this…","MIRO: I have made up my mind. Take Alice and go.\n I am destructing the ship in 5 minutes. Continue to\n function and become as close as possible to what\n you were meant to be.  ",
+			"Zachary: Thank you… Father. ","@END","Alice: Zach. Is what MIRO said true? We’re\n machines? Not humans? ","Zachary: … What’s the difference? ","@END"}; 
 	static AppGameContainer app;
+	Rectangle renderRect;
 	Rectangle menuButton;
 	Rectangle resumeButton, startButton, exitButton;
 	Rectangle quitButton, qmButton, replayButton;
 	Rectangle restartButton, item1Button, item2Button, item3Button, item4Button;
 	boolean title;
+	boolean restart;
+	String last;
+	String person = "MIRO";
+	boolean notClearing = false; //clear...
 	int enemyLayer = 0;
+	int playerx, playery;
 	Image titleDoor1;
+	boolean alone=true;
 	Image titleDoor2;
 	int doorshift = 0;
 	Rectangle levelchange;
 	boolean doormove = false;
+	
 	public Music goodMusic;
 
 	public test(String title, int lev) throws SlickException {
 		super(title);
 		level = lev;
 	}
-
+	void drawString(TrueTypeFont ttf123, String text, int x, int y) {
+	    for (String line : text.split("\n"))
+	        ttf123.drawString(y , x+= 30, line);
+	}
 	@Override
 	public void render(GameContainer arg0, Graphics g) throws SlickException {
 		if (title) {
@@ -188,8 +134,8 @@ public class test extends BasicGame implements MusicListener {
 		} else if (player.isDead) {
 			g.drawImage(new Image("res/Death Screen.png"), 0, 0);
 		} else {
-			grassMap.render(x - mapShiftx, y - 64, 0); // background
-			grassMap.render(x - mapShiftx, y - 64, 1); // transition
+			grassMap.render(x - mapShiftx, y - mapShifty, 0); // background
+			grassMap.render(x - mapShiftx, y - mapShifty, 1); // transition
 			player.sprite.draw(player.x, player.y);
 			for (Medkit meds : medkits) {
 				meds.image.draw(meds.x, meds.y);
@@ -198,6 +144,7 @@ public class test extends BasicGame implements MusicListener {
 			{
 				picky.image.draw(picky.x,picky.y,(float).5);
 			}
+
 			for (Mob moby : mobs) {
 				if ((moby instanceof Drone) && (!((Drone) moby).canExplode))
 					moby.sprite.draw(moby.x, moby.y, new Color(80, 80, 80));
@@ -218,6 +165,7 @@ public class test extends BasicGame implements MusicListener {
 			{
 				guidy.image.draw(guidy.x,guidy.y);
 			}
+			
 			for (Explosion explosive : explosions) {
 				explosive.sprite.draw(explosive.x, explosive.y);
 			}
@@ -226,51 +174,30 @@ public class test extends BasicGame implements MusicListener {
 			}
 			
 			for (int i = 2; i < layers; i++) {
-				//Image trees = new Image("res/Level 1b.png");
-				//trees.draw(x-mapShiftx,y-64);
-				grassMap.render(x - mapShiftx, y - 64,i);//,x,y,32,20, i,false); // objects
-				/*for(int row = 0; row<=79;row++)
+				grassMap.render(x - mapShiftx, y - mapShifty, i); // objects
+			/*	for (int xA=0; xA<grassMap.getTileWidth();xA++)
 				{
-					for(int colum=0;colum<=99;colum++)
+					for (int yA=0;yA<grassMap.getTileHeight();yA++)
 					{
-						if(bitchmap[row][colum]!=0)
+						if (renderRect.contains(new Rectangle((xA * 32) - mapShiftx,(yA * 32) - mapShifty,32,32)))
 						{
-							Image aTile = grassMap.getTileImage(colum,row,i);
-							//aTile.draw(x-mapShiftx+(colum*32),y-64+(row*32));
-							System.out.println(aTile);
+							g.drawImage(grassMap.getTileImage(xA, yA, i), (xA * 32) - mapShiftx,(yA * 32) - mapShifty);
 						}
 					}
 				}*/
 			}
-			
 			HUD.draw(-22, -22);
 			ItemHUD.draw(660, 340);
 			item1.draw(926, 418);
 			item2.draw(799, 534);
+			
+
 			if (player.hp > 0)
 				health = new Image("res/health/" + player.hp + "hp.png");
 			health.draw(114, 22);
 
-			if (slide) {
-				// journal.draw(0,0);
-				guy.draw(-160, 10, .60f);
-				girl.draw(550, 10, .60f);
-				textMod.draw(10, 400);
-				String str = text1Convo[textIndex];
-				if (str.indexOf("@") >= 0) {
-					ttf.drawString(65, 500, "Continue");
-				} else {
-					tryangle.draw(850, 550);
-					String person = str.substring(0, str.indexOf(":"));
-					String text = str.substring(str.indexOf(":") + 1);
-					ttf.drawString(65, 400, person);
-					ttf.drawString(65, 500, text);
-				}
-
-			}
 			if (menu) {
-				if (!slide)
-				{
+				if (!slide) {
 					g.drawImage(new Image("res/Menu.png"), 10, 020);
 					if(firstgun)
 					g.drawImage(new Image("res/menu blank.png"),433,345);
@@ -278,25 +205,105 @@ public class test extends BasicGame implements MusicListener {
 					g.drawImage(new Image("res/menu blank.png"),611,157);
 					if(firstshield)
 					g.drawImage(new Image("res/menu blank.png"),611,342);
+					if (resumeHover == true)
+						g.drawImage(new Image("res/Resume Light.png"), 10, 15);
+					if (quitHover == true)
+						g.drawImage(new Image("res/QuittoMenuL.png"), 10, 15);
+					if (restartHover == true)
+						g.drawImage(new Image("res/RestartL.png"), 10, 15);
+				} else {
+					switch (level)
+					{
+					case 1:
+						guy.draw(160, 10, .60f);	
+						break;
+					case 2:
+						guy.draw(160, 10, .60f);	
+						break;
+					case 3:
+						if (alone)
+						{
+							guy.draw(160, 10, .60f);
+						}
+						else
+						{
+							guy.draw(-160, 10, .60f);
+							guide.draw(660,40,.60f);
+						}
+						break;
+					case 4:
+						guy.draw(-160, 10, .60f);
+						guide.draw(550, 10, .60f);
+						break;
+					case 5:
+						guy.draw(-160, 10, .60f);
+						if (person.equals("MIRO"))
+						{
+							miro.draw(500, 50,1.2f);
+							last="MIRO";
+						}
+						else if (person.equals("Alice"))
+						{
+							girl.draw(550, 10, .60f);
+							last="Alice";
+						}
+						else
+						{
+							if (last.equals("MIRO"))
+							{
+								miro.draw(500, 50,1.2f);
+								last="MIRO";
+							}
+							else if (last.equals("Alice"))
+							{
+								girl.draw(550, 10, .60f);
+								last="Alice";
+							}
+						}
+						
+						break;
+					}
+					
+			/*		textMod.draw(10, 400);
+					String str = text1Convo[textIndex];
+					if (str.indexOf("@") >= 0) {
+						ttf.drawString(65, 500, "Continue");
+					} else {
+						tryangle.draw(850, 550);
+						person = str.substring(0, str.indexOf(":"));
+						String text = str.substring(str.indexOf(":") + 1);
+						ttf.drawString(65, 400, person);
+						drawString(ttf2,text, 450,40);
+					} */
+
 				}
+
 			}
+		
+			g.drawString("Level: " + level, 200, 0);
+		//	g.drawRect(player.rect.getX(), player.rect.getY(), 64, 64);
+				//g.draw(wally.rect);
+	//			wally.image.draw(wally.x, wally.y);
 			
 		}
+		}
 
-	}
+	
 
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
 		walls.clear();
+		guides.clear();
+		doors.clear();
+		exitportals.clear();
 		mobs.clear();
 		AL.destroy();
-		guides.add(new Guide(64,256));
-		points.add(new Point(256,256));
-		points.add(new Point(290,512));
-		points.add(new Point(330,512));
+		renderRect = new Rectangle(70,10,900,600);
 		tryangle = new Image("res/A Triangle.png");
 		font = new Font("Verdana", Font.BOLD, 30);
+		font2 = new Font("Verdana", Font.BOLD, 23);
 		ttf = new TrueTypeFont(font, true);
+		ttf2 = new TrueTypeFont(font2, true);
 		step1 = new Sound("res/sound/Step.wav");
 		step2 = new Sound("res/sound/Step2.wav");
 		lasersfx = new Sound("res/sound/Laser.wav");
@@ -308,16 +315,16 @@ public class test extends BasicGame implements MusicListener {
 				"res/Video Game Tiles - Pixel by Pixel/Cursor.png"), 0, 0);
 		guy = new Image("res/Male Guy.png");
 		girl = new Image("res/Female Girl.png");
+		guide = new Image("res/Guilty Spark.png");
+		miro = new Image("res/MIRO.png");
 		textMod = new Image("res/Text Mod.png");
-		slide = false;
 		player = new Player();
 		levelchange = new Rectangle(972, 2144, 160, 32);
 		x = 0;
 		y = 0;
 		timey = 0;
-		
 		pasta = false;
-		HUD = new Image("res/Video Game Tiles - Pixel by Pixel/HUD.png");
+		HUD = new Image("res//HUD.png");
 		health = new Image("res/health/20hp.png");
 		ItemHUD = new Image(
 				"res/Video Game Tiles - Pixel by Pixel/Inventory.png");
@@ -329,17 +336,20 @@ public class test extends BasicGame implements MusicListener {
 		titleDoor2 = new Image(
 				"res/Video Game Tiles - Pixel by Pixel/Door BR.png");
 		menuButton = new Rectangle(660 + 272, 340 + 238, 86, 32);
-		resumeButton = new Rectangle(158, 366, 312, 53);
-		restartButton = new Rectangle(158, 436, 312, 53);
-		quitButton = new Rectangle(158, 508, 312, 53);
-		item1Button = new Rectangle(423, 175, 161, 158);
-		item2Button = new Rectangle(582, 175, 161, 158);
-		item3Button = new Rectangle(423, 352, 161, 158);
-		item4Button = new Rectangle(582, 352, 161, 158);
+		resumeButton = new Rectangle(58, 366, 312, 53);
+		restartButton = new Rectangle(58, 436, 312, 53);
+		quitButton = new Rectangle(58, 508, 312, 53);
+		item1Button = new Rectangle(433, 157, 161, 158);
+		item2Button = new Rectangle(611,157, 161, 158);
+		item3Button = new Rectangle(433,345, 161, 158);
+		item4Button = new Rectangle(611,342, 161, 158);
 		replayButton = new Rectangle(351, 396, 310, 56);
 		qmButton = new Rectangle(351, 508, 310, 56);
 		startButton = new Rectangle(532, 396, 310, 51);
 		exitButton = new Rectangle(532, 496, 310, 51);
+		player.rect.setX(player.x);
+		player.rect.setY(player.y);
+		dontCheck = false;
 		switch (level) {
 		case 0:
 			doorshift = 0;
@@ -349,46 +359,88 @@ public class test extends BasicGame implements MusicListener {
 			goodMusic.addListener(this);
 			goodMusic.loop();
 			grassMap = new TiledMap("res/Level 1.tmx");
-			layers = 5;
-			enemyLayer = 5;
+			layers = 4;
+			enemyLayer = 4;
+			mapShiftx = 350;
+			mapShifty = 64;
 			break;
 		case 1:
-			slide = true;
 			grassMap = new TiledMap("res/Level 1.tmx");
 			goodMusic = new Music("res/music/LightHart.wav");
 			goodMusic.addListener(this);
 			goodMusic.loop();
-			layers = 5;
-			enemyLayer = 5;
+			layers = 4;
+			enemyLayer = 4;
+			mapShiftx = 350;
+			mapShifty = 64;
 			break;
 		case 2:
-			enemyLayer = 0;
+			canChange = true;
 			grassMap = new TiledMap("res/Level 2.tmx");
-			layers = 4;
 			goodMusic = new Music("res/music/LightHart.wav");
 			goodMusic.loop();
 			layers = 6;
 			enemyLayer = 6;
+			mapShiftx = 80;
+			mapShifty = 2000;
+			slide = true;
+			menu = true;
 			break;
 		case 3:
+			canChange = true;
 			grassMap = new TiledMap("res/Level 3.tmx");
+			mapShiftx = 200;
+			mapShifty = 720;
 			layers = 4;
+			enemyLayer = 4;
 			goodMusic = new Music(
 					"res/music/The Storm That Capsized the Ship.wav");
 			goodMusic.loop();
+			slide = true;
+			menu = true;
+			points.add(new Point(51*32-mapShiftx,27*32-mapShifty));
+			points.add(new Point(63*32-mapShiftx,36*32-mapShifty));
+			points.add(new Point(79*32-mapShiftx,42*32-mapShifty));
+			points.add(new Point(74*32-mapShiftx,59*32-mapShifty));
+			points.add(new Point(53*32-mapShiftx,67*32-mapShifty));
+			points.add(new Point(49*32-mapShiftx,78*32-mapShifty));
+			points.add(new Point(48*32-mapShiftx,92*32-mapShifty));
+			points.add(new Point(61*32-mapShiftx,93*32-mapShifty));
+			points.add(new Point(88*32-mapShiftx,91*32-mapShifty));
+			points.add(new Point(91*32-mapShiftx,77*32-mapShifty));
+			points.add(new Point(111*32-mapShiftx,83*32-mapShifty));
+			points.add(new Point(119*32-mapShiftx,69*32-mapShifty));
+			points.add(new Point(110*32-mapShiftx,57*32-mapShifty));
+			points.add(new Point(108*32-mapShiftx,42*32-mapShifty));
+			points.add(new Point(128*32-mapShiftx,47*32-mapShifty));
+			points.add(new Point(141*32-mapShiftx,55*32-mapShifty));
+			points.add(new Point(140*32-mapShiftx,27*32-mapShifty));
+			guides.add(new Guide(36*32-mapShiftx,33*32-mapShifty));
 			break;
 		case 4:
+			mapShiftx = 2600;
+			mapShifty = 3360;
+			slide = true;
+			menu = true;
+			canChange = true;
 			grassMap = new TiledMap("res/Level 4.tmx");
-			layers = 4;
+			layers = 3;
+			enemyLayer= 3;
 			goodMusic = new Music(
-					"res/music/The Storm That Capsized the Ship.wav");
+					"res/music/5. Eerie 2.WAV");
 			goodMusic.loop();
 			break;
 		case 5:
+			mapShiftx = 0;
+			mapShifty = -180;
+			canChange=true;
 			grassMap = new TiledMap("res/Level 5.tmx");
-			layers = 6;
+			layers = 4;
+			enemyLayer= 4;
+			slide = true;
+			menu = true;
 			goodMusic = new Music(
-					"res/music/The Storm That Capsized the Ship.wav");
+					"res/music/6. HeavyBoss.WAV");
 			goodMusic.loop();
 			break;
 		}
@@ -399,14 +451,32 @@ public class test extends BasicGame implements MusicListener {
 				String enemy = grassMap.getTileProperty(tileID1, "enemy",
 						"none");
 				switch (enemy) {
+				case "exit":
+					exitportals.add(new Wall((xAxis1 * 32) - mapShiftx,(yAxis1 * 32) - mapShifty, "grass"));
+					break;
 				case "melee":
 					mobs.add(new Meleebot((xAxis1 * 32) - mapShiftx,
-							(yAxis1 * 32) - 64));
+							(yAxis1 * 32) - mapShifty));
 					break;
 				case "sentry":
 					mobs.add(new Sentry((xAxis1 * 32) - mapShiftx,
-							(yAxis1 * 32) - 64));
+							(yAxis1 * 32) - mapShifty));
 					break;
+				case "drone":
+					mobs.add(new Drone((xAxis1 * 32) - mapShiftx,
+							(yAxis1 * 32) - mapShifty));
+					break;
+				case "nurse":
+					mobs.add(new Nurse((xAxis1 * 32) - mapShiftx,
+							(yAxis1 * 32) - mapShifty));
+					break;
+					
+				}
+				String value = grassMap.getTileProperty(tileID1, "blocked",
+						"false");
+				if (value.equals("true")) {
+					walls.add(new Wall((xAxis1 * 32) - mapShiftx,
+							(yAxis1 * 32) - mapShifty, "grass"));
 				}
 			}
 		}
@@ -416,16 +486,20 @@ public class test extends BasicGame implements MusicListener {
 					int tileID = grassMap.getTileId(xAxis, yAxis, layer);
 					String value = grassMap.getTileProperty(tileID, "blocked",
 							"false");
-					// Drone, Nurse, Meele, Sentry, Miro
 					if (value.equals("true")) {
 						walls.add(new Wall((xAxis * 32) - mapShiftx,
-								(yAxis * 32) - 64, "grass"));
+								(yAxis * 32) - mapShifty, "grass"));
+					}
+					String vdoor = grassMap.getTileProperty(tileID, "door",
+							"none");
+					if (vdoor.equals("door")) {
+						doors.add(new Door((xAxis * 32) - mapShiftx,
+								(yAxis * 32) - mapShifty,"Short"));
 					}
 				}
 			}
 
 		}
-
 	}
 
 	@Override
@@ -457,68 +531,39 @@ public class test extends BasicGame implements MusicListener {
 			if (doormove) {
 				doorshift += 16;
 				if (doorshift > 1024) {
-					level = 1;
+					slide =true;
+					menu=true;
+					level = 5;
 					title = false;
+					
 				}
 			}
 		} else {
-			if (level == 1) {
-				if ((y == -1824) && (x < -444) && (x > -548)) {
-					level++;
-					app.reinit();
-					journal = new Image(
-							"res/Video Game Tiles - Pixel by Pixel/1.png");
-					slide = true;
-					menu = true;
-					goodMusic = new Music("res/music/LightHart.wav");
-					goodMusic.loop();
-				}
-			} else if (level == 2) {
-				if ((y == -1824) && (x < -928) && (x > -1052)) {
-					level++;
-					app.reinit();
-					journal = new Image(
-							"res/Video Game Tiles - Pixel by Pixel/2.png");
-					slide = true;
-					menu = true;
-					Music goodMusic1 = new Music("res/music/LightHart.wav");
-					goodMusic1.loop();
-				}
-			} else if (level == 3) {
-				if ((y == -1504) && (x < -1212) && (x > -1360)) {
-					level++;
-					app.reinit();
-					journal = new Image(
-							"res/Video Game Tiles - Pixel by Pixel/3.png");
-					slide = true;
-					menu = true;
-					Music goodMusic1 = new Music(
-							"res/music/The Storm That Capsized the Ship.wav");
-					goodMusic1.loop();
-				}
-			} else if (level == 4) {
-				if ((y == 32) && (x < -1180) && (x > -1360)) {
-					level++;
-					app.reinit();
-					journal = new Image(
-							"res/Video Game Tiles - Pixel by Pixel/4.png");
-					slide = true;
-					menu = true;
-					goodMusic = new Music(
-							"res/music/The Storm That Capsized the Ship.wav");
-					goodMusic.loop();
-				}
-			} else if (level == 5) {
-				if ((y <= -1560) && (x < -740) && (x > -864)) {
-					level++;
-					journal = new Image(
-							"res/Video Game Tiles - Pixel by Pixel/5.png");
-					slide = true;
-					menu = true;
-				}
-			}
 			pasta = true;
-			if ((menu == false) && (player.isDead == false)) {
+			if ((menu == false) && (player.isDead == false)) { // GAMES IS
+						
+				// PLAYING
+				for ( Guide guy : guides)
+				{
+					
+					if(guy.on)
+					{
+					if ((Math.sqrt(Math.pow(player.x-guy.x,2)+Math.pow(player.y-guy.y,2)))>320)
+					{
+
+						if (lame >= 100)
+						{
+							lame=0;
+							player.hurt();
+						}
+						else
+						{
+							lame++;
+						}
+					}
+					}
+				}
+				System.out.println("its running...");
 				if (player.direction.equals("down"))
 					player.sprite = new Animation(
 							new Image[] { new Image(
@@ -559,6 +604,7 @@ public class test extends BasicGame implements MusicListener {
 							new Image[] { new Image(
 									"res/Character Sprite/Movement/Front_Left 1.png") },
 							1, false);
+
 				player.sprite.update(arg1);
 				// updates for list of stuff
 				for (int i = 0; i < mobs.size(); i++) {
@@ -585,9 +631,17 @@ public class test extends BasicGame implements MusicListener {
 							mobs.get(i).dropShield(pickups);
 							firstshield=false;
 						}
+
 						mobs.remove(i);
+						// EXPLOSION!
 					}
+					
 				}
+				for (int i = 0; i<pickups.size();i++)
+				{
+					pickups.get(i).update(player,i,pickups);
+				}
+
 				for (int i = 0; i < explosions.size(); i++) {
 					explosions.get(i).update(explosions, i);
 				}
@@ -605,44 +659,41 @@ public class test extends BasicGame implements MusicListener {
 						}
 					}
 				}
+
 				for (int i = 0; i < projectiles.size(); i++) {
-					projectiles.get(i).update(10, player, mobs, projectiles);
-					if (projectiles.size() > 0) {
-						if ((Math.sqrt((Math.pow(projectiles.get(i).startingX
-								- projectiles.get(i).x, 2))
-								+ (Math.pow(projectiles.get(i).startingY
-										- projectiles.get(i).y, 2))) > 200)&&(!projectiles.get(i).fromPlayer))
-							projectiles.remove(i);
-						try{
-						if ((Math.sqrt((Math.pow(projectiles.get(i).startingX
-								- projectiles.get(i).x, 2))
-								+ (Math.pow(projectiles.get(i).startingY
-										- projectiles.get(i).y, 2))) > 300)&&(projectiles.get(i).fromPlayer))
-							projectiles.remove(i);}
-						catch (Exception e){}
-					}
-					 else
-				      {
-				       Rectangle bullet = new Rectangle(projectiles.get(i).x,projectiles.get(i).y,projectiles.get(i).image.getWidth(),projectiles.get(i).image.getHeight());
-				       for(Wall wally:walls)
-				       { 
-				        Rectangle wallbox = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
-				        if ((wallbox.intersects(bullet))||(wallbox.contains(projectiles.get(i).x,projectiles.get(i).y)))
-				        {
-				         projectiles.remove(i);
-				         break;
-				        }
-				       }
-				      }
-				}
+				     projectiles.get(i).update(10, player, mobs, projectiles);
+				     if (projectiles.size() > 0) {
+				      if ((Math.sqrt((Math.pow(projectiles.get(i).startingX
+				        - projectiles.get(i).x, 2))
+				        + (Math.pow(projectiles.get(i).startingY
+				          - projectiles.get(i).y, 2))) > 200)&&(!projectiles.get(i).fromPlayer))
+				       projectiles.remove(i);
+				      try{
+				      if ((Math.sqrt((Math.pow(projectiles.get(i).startingX
+				        - projectiles.get(i).x, 2))
+				        + (Math.pow(projectiles.get(i).startingY
+				          - projectiles.get(i).y, 2))) > 300)&&(projectiles.get(i).fromPlayer))
+				       projectiles.remove(i);}
+				      catch (Exception e){}
+				     }
+				      else
+				          {
+				           Rectangle bullet = new Rectangle(projectiles.get(i).x,projectiles.get(i).y,projectiles.get(i).image.getWidth(),projectiles.get(i).image.getHeight());
+				           for(Wall wally:walls)
+				           { 
+				            Rectangle wallbox = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+				            if ((wallbox.intersects(bullet))||(wallbox.contains(projectiles.get(i).x,projectiles.get(i).y)))
+				            {
+				             projectiles.remove(i);
+				             break;
+				            }
+				           }
+				          }
+				    }
 				for (int i = 0; i < medkits.size(); i++) {
 					medkits.get(i).update(player, i, medkits);
 				}
-				for (int i = 0; i<pickups.size();i++)
-				{
-					pickups.get(i).update(player,i,pickups);
-				}
-				if (input.isKeyDown(Input.KEY_A)) {
+				if (input.isKeyDown(Input.KEY_A)) {// left
 					if (player.swinging == false) {
 						player.direction = "left";
 						collisionCheck(4, 0, "right");
@@ -709,8 +760,8 @@ public class test extends BasicGame implements MusicListener {
 					} else
 						steptimer++;
 				}
+
 				if (input.isMousePressed(0)) {
-					slide = false;
 					if (level == 6) {
 						title = true;
 						doorshift = 0;
@@ -742,6 +793,7 @@ public class test extends BasicGame implements MusicListener {
 								player.stabDL = new Animation(player.stabDownLeftScrew,200,false);
 								player.stabDR = new Animation(player.stabDownRightScrew,200,false);
 
+
 								for (Mob moby : mobs) {
 									if (player.meleeRange(moby, 64)) {
 										moby.hurt(10);
@@ -752,6 +804,7 @@ public class test extends BasicGame implements MusicListener {
 								}
 							} else if (player.getWeapon1().equals("saber")) {
 								sabersfx.play();
+
 								player.stabL = new Animation(
 										player.stabLeftSaber, time2, true);
 								player.stabR = new Animation(
@@ -764,6 +817,8 @@ public class test extends BasicGame implements MusicListener {
 								player.stabUR = new Animation(player.stabUpRightSaber,200,false);
 								player.stabDL = new Animation(player.stabDownLeftSaber,200,false);
 								player.stabDR = new Animation(player.stabDownRightSaber,200,false);
+
+
 								for (Mob moby : mobs) {
 									if (player.meleeRange(moby, 128)) {
 										moby.hurt(20);
@@ -784,11 +839,13 @@ public class test extends BasicGame implements MusicListener {
 								player.stabUR = new Animation(player.shootUpRight,200,false);
 								player.stabDL = new Animation(player.shootDownLeft,200,false);
 								player.stabDR = new Animation(player.shootDownRight,200,false);
+
 								lasersfx.play();
 								if (player.direction.equals("left")) {
 									projectiles.add(new Projectile(player.x,
 											player.y + 35, -1000,
 											player.y + 35, true));
+
 								} else if (player.direction.equals("right")) {
 									projectiles.add(new Projectile(
 											player.x + 45, player.y + 35, 1000,
@@ -821,6 +878,7 @@ public class test extends BasicGame implements MusicListener {
 											player.x + 61, player.y + 43,
 											player.x + 61 + 1000,
 											player.y + 43 + 1000, true));
+
 								}
 							}
 							if(player.getWeapon1().equals("shield"))
@@ -845,6 +903,7 @@ public class test extends BasicGame implements MusicListener {
 									}
 								}
 							}
+
 							player.swinging = true;
 							timey = 0;
 						}
@@ -873,6 +932,8 @@ public class test extends BasicGame implements MusicListener {
 							player.stabUR = new Animation(player.stabUpRightScrew,200,false);
 							player.stabDL = new Animation(player.stabDownLeftScrew,200,false);
 							player.stabDR = new Animation(player.stabDownRightScrew,200,false);
+
+
 							for (Mob moby : mobs) {
 								if (player.meleeRange(moby, 64)) {
 									moby.hurt(10);
@@ -883,6 +944,7 @@ public class test extends BasicGame implements MusicListener {
 							}
 						} else if (player.getWeapon2().equals("saber")) {
 							sabersfx.play();
+
 							player.stabL = new Animation(player.stabLeftSaber,
 									time2, true);
 							player.stabR = new Animation(player.stabRightSaber,
@@ -895,6 +957,8 @@ public class test extends BasicGame implements MusicListener {
 							player.stabUR = new Animation(player.stabUpRightSaber,200,false);
 							player.stabDL = new Animation(player.stabDownLeftSaber,200,false);
 							player.stabDR = new Animation(player.stabDownRightSaber,200,false);
+
+
 							for (Mob moby : mobs) {
 								if (player.meleeRange(moby, 128)) {
 									moby.hurt(20);
@@ -915,43 +979,43 @@ public class test extends BasicGame implements MusicListener {
 							player.stabUR = new Animation(player.shootUpRight,200,false);
 							player.stabDL = new Animation(player.shootDownLeft,200,false);
 							player.stabDR = new Animation(player.shootDownRight,200,false);
+
 							lasersfx.play();
 							if (player.direction.equals("left")) {
 								projectiles.add(new Projectile(player.x,
 										player.y + 35, -1000,
 										player.y + 35, true));
-							} else if (player.direction.equals("right")) {
-								projectiles.add(new Projectile(
-										player.x + 45, player.y + 35, 1000,
-										player.y + 35, true));
+							} else if (player.direction.equals("right")) {								projectiles.add(new Projectile(
+									player.x + 45, player.y + 35, 1000,
+									player.y + 35, true));
 							} else if (player.direction.equals("up")) {
 								projectiles.add(new Projectile(
 										player.x + 45, player.y + 35,
 										player.x + 45, -1000, true));
-							} else if (player.direction.equals("down")) {
-								projectiles.add(new Projectile(
-										player.x + 15, player.y + 35,
-										player.x + 15, 1000, true));
-							} else if (player.direction.equals("upleft")) {
-								projectiles.add(new Projectile(
-										player.x + 17, player.y + 30,
-										player.x + 17 - 1000,
-										player.y + 30 - 1000, true));
-							} else if (player.direction.equals("upright")) {
-								projectiles.add(new Projectile(
-										player.x + 44, player.y + 30,
-										player.x + 44 + 1000,
-										player.y + 30 - 1000, true));
-							} else if (player.direction.equals("downleft")) {
-								projectiles.add(new Projectile(
-										player.x + 2, player.y + 43,
-										player.x + 2 - 1000,
-										player.y + 43 + 1000, true));
-							} else if (player.direction.equals("downright")) {
-								projectiles.add(new Projectile(
-										player.x + 61, player.y + 43,
-										player.x + 61 + 1000,
-										player.y + 43 + 1000, true));
+							} else if (player.direction.equals("down")) {								projectiles.add(new Projectile(
+									player.x + 15, player.y + 35,
+									player.x + 15, 1000, true));
+						} else if (player.direction.equals("upleft")) {
+							projectiles.add(new Projectile(
+									player.x + 17, player.y + 30,
+									player.x + 17 - 1000,
+									player.y + 30 - 1000, true));
+						} else if (player.direction.equals("upright")) {
+							projectiles.add(new Projectile(
+									player.x + 44, player.y + 30,
+									player.x + 44 + 1000,
+									player.y + 30 - 1000, true));
+						} else if (player.direction.equals("downleft")) {
+							projectiles.add(new Projectile(
+									player.x + 2, player.y + 43,
+									player.x + 2 - 1000,
+									player.y + 43 + 1000, true));
+						} else if (player.direction.equals("downright")) {
+							projectiles.add(new Projectile(
+									player.x + 61, player.y + 43,
+									player.x + 61 + 1000,
+									player.y + 43 + 1000, true));
+
 							}
 						}
 						if(player.getWeapon2().equals("shield"))
@@ -976,6 +1040,7 @@ public class test extends BasicGame implements MusicListener {
 								}
 							}
 						}
+
 						player.swinging = true;
 						timey = 0;
 
@@ -996,22 +1061,33 @@ public class test extends BasicGame implements MusicListener {
 				} else {
 					timey += 1;
 				}
-			} else {
-				if (menu) {
+			}
+			if (menu == true) {
+				// HOVER STUFF
+				System.out.println("Menu is open!!!");
+				if (slide == false) {
+					if ((resumeButton.contains(input.getMouseX(),
+							input.getMouseY()))) {
+						resumeHover = true;
+					} else {
+						resumeHover = false;
+					}
+					if ((restartButton.contains(input.getMouseX(),
+							input.getMouseY()))) {
+						restartHover = true;
+					} else {
+						restartHover = false;
+					}
+					if ((quitButton.contains(input.getMouseX(),
+							input.getMouseY()))) {
+						quitHover = true;
+					} else {
+						quitHover = false;
+					}
 					if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 						menu = false;
-						slide = false;
 					}
-					if (input.isKeyPressed(Input.KEY_RIGHT)) {
-						if (!text1Convo[textIndex].equals("@END")) {
-							textIndex++;
-						} else {
-							menu = false;
-							slide = false;
-							if (textIndex < text1Convo.length)
-								textIndex++;
-						}
-					}
+
 					if (input.isMousePressed(0)) {
 						if ((resumeButton.contains(input.getMouseX(),
 								input.getMouseY()))) {
@@ -1020,6 +1096,27 @@ public class test extends BasicGame implements MusicListener {
 						if ((restartButton.contains(input.getMouseX(),
 								input.getMouseY()))) {
 							app.reinit();
+							if(level==2)
+							{
+								textIndex-=7;
+							}
+							if(level==3)
+							{
+								textIndex-=10;
+								alone = true;
+							}
+							if(level==4)
+							{
+								textIndex-=8;
+							}
+							if(level==5)
+							{
+								textIndex-=30;
+							}
+							if(level==6)
+							{
+								textIndex-=3;
+							}
 						}
 						if ((quitButton.contains(input.getMouseX(),
 								input.getMouseY()))) {
@@ -1051,6 +1148,7 @@ public class test extends BasicGame implements MusicListener {
 							item1 = new Image(
 									"res/Weapons/Shield.png");
 						}
+
 					} else if (input.isMousePressed(1)) {
 						if ((item1Button.contains(input.getMouseX(),
 								input.getMouseY()))) {
@@ -1076,14 +1174,61 @@ public class test extends BasicGame implements MusicListener {
 							item2 = new Image(
 									"res/Weapons/Shield.png");
 						}
+
+					}
+				}
+				if (slide == true) {
+					if (input.isKeyPressed(Input.KEY_SPACE)) {
+						menu=false;
+						slide =false;
+/*
+						if (!text1Convo[textIndex].equals("@END")) {
+							textIndex++;
+							if (level==3)
+							{
+								if(time==1)
+								{
+									alone=false;
+								}
+								else
+								{
+									time++;
+								}
+							}
+						} else {
+							menu = false;
+							slide = false;
+							if (textIndex < text1Convo.length)
+								textIndex++;
+						}*/
 					}
 				}
 			}
-			if (player.isDead) {
+			if (player.isDead == true) {
 				if (input.isMousePressed(0)) {
 					if ((replayButton.contains(input.getMouseX(),
 							input.getMouseY()))) {
 						app.reinit();
+						if(level==2)
+						{
+							textIndex-=7;
+						}
+						if(level==3)
+						{
+							textIndex-=10;
+						}
+						if(level==4)
+						{
+							textIndex-=8;
+						}
+						if(level==5)
+						{
+							textIndex-=30;
+						}
+						if(level==6)
+						{
+							textIndex-=3;
+						}
 					}
 					if (qmButton.contains(input.getMouseX(), input.getMouseY())) {
 						level = 0;
@@ -1096,91 +1241,133 @@ public class test extends BasicGame implements MusicListener {
 		}
 	}
 
+	/*public void CheckforLevelChange() throws SlickException
+	{
+		if (notClearing == true) {
+			System.out.println("Its CHECKING :)");
+			for (Wall xit : exitportals) {
+				if (player.rect.intersects(xit.rect) && canChange == true) {
+					canChange = false;
+					level++;
+					goodMusic = new Music("res/music/LightHart.wav");
+					goodMusic.loop();
+					app.reinit();
+				}
+			}
+		} else {
+			System.out.println("Cant Check, reseting exitportals...");
+		}
+	}*/
 	public void collisionCheck(int x1, int y1, String direction)
 			throws SlickException {
-		//wall moves, player stationary
-		
-		for(Wall wally: walls)
-		{
-			Rectangle box = new Rectangle(player.x,player.y,player.image.getWidth(),player.image.getHeight());
-			if(direction.equals("left"))
-			{//<-
-				boolean a=(box.contains(wally.x-4,wally.y));
-				boolean b=(box.contains(wally.x-4,wally.y+wally.image.getHeight()));
-				if(a||b)
-					x1=0;
+		// wall moves, player stationary
+		restart=false;
+		for (Wall xit : exitportals) {
+			if (player.rect.intersects(xit.rect) && canChange == true) {
+				canChange = false;
+				level++;
+				goodMusic = new Music("res/music/LightHart.wav");
+				goodMusic.loop();
+				restart=true;
 			}
-			else if(direction.equals("right"))
-			{
-				boolean a=(box.contains(wally.x+wally.image.getWidth()+4,wally.y));
-				boolean b=(box.contains(wally.x+wally.image.getWidth()+4,wally.y+wally.image.getHeight()));
-				if(a||b)
-					x1=0;
-			}
-			else if(direction.equals("up"))
-			{
-				boolean a=(box.contains(wally.x,wally.y-4));
-				boolean b=(box.contains(wally.x+wally.image.getWidth(),wally.y-4));
-				if(a||b)
-					y1=0;
-			}
-			else if(direction.equals("down"))
-			{
-				boolean a=(box.contains(wally.x,wally.y+wally.image.getHeight()+4));
-				boolean b=(box.contains(wally.x+wally.image.getWidth(),wally.y+wally.image.getHeight()+4));
-				if(a||b)
-					y1=0;
-			}
-			
 		}
-			// TODO Keep adding the things on the screen as we make more stuff
-			x += x1;
-			y += y1;
-			levelchange.setX(levelchange.getX() + x1);
-			levelchange.setY(levelchange.getY() + y1);
-			for (Wall wally : walls) {
-				wally.x += x1;
-				wally.y += y1;
-			}
-			for (Mob moby : mobs) {
-				moby.x += x1;
-				moby.y += y1;
-			}
-			for (Projectile projecty : projectiles) {
-				projecty.x += x1;
-				projecty.y += y1;
-			}
-			for (Medkit meds : medkits) {
-				meds.x += x1;
-				meds.y += y1;
-			}
-			for (Pickup picky: pickups)
-			{
-				picky.x += x1;
-				picky.y += y1;
-			}
-			for (Guide guidy: guides)
-			{
-				guidy.x +=x1;
-				guidy.y +=y1;
-			}
-			for(Point pointy: points)
-			{
-				pointy.x +=x1;
-				pointy.y+= y1;
-			}
+		if (restart)
+		{
+			app.reinit();
+		}
 		
+		for (Wall wally : walls) {
+			Rectangle box = new Rectangle(player.x, player.y,
+					player.image.getWidth(), player.image.getHeight());
+			if (direction.equals("left")) {// <-
+				boolean a = (box.contains(wally.x - 4, wally.y));
+				boolean b = (box.contains(wally.x - 4,
+						wally.y + wally.image.getHeight()));
+				if (a || b)
+					x1 = 0;
+			} else if (direction.equals("right")) {
+				boolean a = (box.contains(wally.x + wally.image.getWidth() + 4,
+						wally.y));
+				boolean b = (box.contains(wally.x + wally.image.getWidth() + 4,
+						wally.y + wally.image.getHeight()));
+				if (a || b)
+					x1 = 0;
+			} else if (direction.equals("up")) {
+				boolean a = (box.contains(wally.x, wally.y - 4));
+				boolean b = (box.contains(wally.x + wally.image.getWidth(),
+						wally.y - 4));
+				if (a || b)
+					y1 = 0;
+			} else if (direction.equals("down")) {
+				boolean a = (box.contains(wally.x,
+						wally.y + wally.image.getHeight() + 4));
+				boolean b = (box.contains(wally.x + wally.image.getWidth(),
+						wally.y + wally.image.getHeight() + 4));
+				if (a || b)
+					y1 = 0;
+			}
+
+		}
+		// TODO Keep adding the things on the screen as we make more stuff
+		x += x1;
+		y += y1;
+		levelchange.setX(levelchange.getX() + x1);
+		levelchange.setY(levelchange.getY() + y1);
+		for (Door doory : doors) {
+			doory.x += x1;
+			doory.y += y1;
+		}
+		for (Wall wally : walls) {
+			wally.x += x1;
+			wally.y += y1;
+		}
+		for (Mob moby : mobs) {
+			moby.x += x1;
+			moby.y += y1;
+		}
+		for (Projectile projecty : projectiles) {
+			projecty.x += x1;
+			projecty.y += y1;
+		}
+		for (Medkit meds : medkits) {
+			meds.x += x1;
+			meds.y += y1;
+		}
+		 for (Pickup picky: pickups)
+		 {
+		 picky.x += x1;
+		 picky.y += y1;
+		 }
+		for (Wall wally : exitportals) {
+			wally.x += x1;
+			wally.y += y1;
+			wally.rect.setX(wally.rect.getX() + x1);
+			wally.rect.setY(wally.rect.getY() + y1);
+
+		}
+		for (Guide guidy: guides)
+		{
+			guidy.x +=x1;
+			guidy.y +=y1;
+		}
+		for(Point pointy: points)
+		{
+			pointy.x +=x1;
+			pointy.y+= y1;
+		}
+
 
 	}
 
 	public static void main(String[] args) {
 		int maxFPS = 60;
 		try {
-			app = new AppGameContainer(new test("Game", 0));
+			app = new AppGameContainer(new test("Separado", 0));
 			app.setDisplayMode(1024, 640, false);
 			app.setTargetFrameRate(maxFPS);
 			app.setTitle("Separado");
 			app.setShowFPS(true);
+			app.setUpdateOnlyWhenVisible(true);
 			app.start();
 		} catch (SlickException e) {
 			e.printStackTrace();
@@ -1191,13 +1378,12 @@ public class test extends BasicGame implements MusicListener {
 	@Override
 	public void musicEnded(Music arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void musicSwapped(Music arg0, Music arg1) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
 }

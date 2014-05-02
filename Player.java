@@ -1,5 +1,7 @@
 package rpg;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -15,9 +17,10 @@ public class Player extends Entity {
     public int shoot1=0;
     public int shoot2 = 0;
     public String weapon1 = "screw driver";
-    public String weapon2 = "";
+    public String weapon2 = "screw driver";
     public boolean canAttack = true;
     public boolean swinging;
+    public boolean shieldOut = false;
     public Image[] leftA = {new Image("res/Video Game Tiles - Pixel by Pixel/Left A1.png"), new Image("res/Video Game Tiles - Pixel by Pixel/Left A2.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left A3.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left A4.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left B1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left B2.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left B3.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Left B4.png")};
     public Image[] rightA = {new Image("res/Video Game Tiles - Pixel by Pixel/Right A1.png"), new Image("res/Video Game Tiles - Pixel by Pixel/Right A2.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Right A3.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Right A4.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Right B1.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Right B2.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Right B3.png"),new Image("res/Video Game Tiles - Pixel by Pixel/Right B4.png")};
 	public Image[] upA = {new Image("res/Video Game Tiles - Pixel by Pixel/playerbk1.png"), new Image("res/Video Game Tiles - Pixel by Pixel/playerbk2.png"), new Image("res/Video Game Tiles - Pixel by Pixel/playerbk3.png"), new Image("res/Video Game Tiles - Pixel by Pixel/playerbk4.png"), new Image("res/Video Game Tiles - Pixel by Pixel/playerbk5.png"), new Image("res/Video Game Tiles - Pixel by Pixel/playerbk6.png")};
@@ -105,7 +108,178 @@ public class Player extends Entity {
     	y = 288;
     	hp = 20;
     }
-
+    public void shieldbash(Mob object, ArrayList<Wall>	walls)
+    {//assuming in range already
+    	double halfway=0;
+    	if(direction.equals("up"))
+    	{
+    		object.y+=-64;
+    		object.Xknocked=object.x;
+    		for(Wall wally:walls)
+    		{
+    			Rectangle rect = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+    			Rectangle bot = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    			boolean inside = rect.intersects(bot);
+    			while(inside)
+    			{
+    				object.y++;
+    				rect = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+    				bot = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    				inside = rect.intersects(bot);
+    			}
+    		}
+    		halfway=((Math.sqrt((Math.pow((x-object.x),2))+(Math.pow((y-object.y),2))))/2);
+    		object.Yknocked=(float) (object.y-halfway);
+    	}
+    	else if(direction.equals("down"))
+    	{
+    		object.y+=64;
+    		object.Xknocked=object.x;
+    		for(Wall wally:walls)
+    		{
+    			Rectangle rect = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+    			Rectangle bot = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    			boolean inside = rect.intersects(bot);
+    			while(inside)
+    			{
+    				object.y--;
+    				rect = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+    				bot = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    				inside = rect.intersects(bot);
+    			}
+    		}
+    		halfway=((Math.sqrt((Math.pow((x-object.x),2))+(Math.pow((y-object.y),2))))/2);
+    		object.Yknocked=(float) (object.y+halfway);
+    	}
+    	else if(direction.equals("left"))
+    	{
+    		object.x+=-64;
+    		for(Wall wally:walls)
+    		{
+    			Rectangle rect = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+    			Rectangle bot = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    			boolean inside = rect.intersects(bot);
+    			while(inside)
+    			{
+    				object.x++;
+    				rect = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+    				bot = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    				inside = rect.intersects(bot);
+    			}
+    		}
+    		halfway=((Math.sqrt((Math.pow((x-object.x),2))+(Math.pow((y-object.y),2))))/2);
+    		object.Xknocked=(float) (object.x-halfway);
+    		object.Yknocked=object.y;
+    	}
+    	else if(direction.equals("right"))
+    	{
+    		object.x+=64;
+    		for(Wall wally:walls)
+    		{
+    			Rectangle rect = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+    			Rectangle bot = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    			boolean inside = rect.intersects(bot);
+    			while(inside)
+    			{
+    				object.y--;
+    				rect = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+    				bot = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    				inside = rect.intersects(bot);
+    			}
+    		}
+    		halfway=((Math.sqrt((Math.pow((x-object.x),2))+(Math.pow((y-object.y),2))))/2);
+    		object.Xknocked=(float) (object.x+halfway);
+    		object.Yknocked=object.y;
+    	}
+    	else if(direction.equals("upleft"))
+    	{
+    		object.y+=-64;
+    		object.x+=-64;
+    		for(Wall wally:walls)
+    		{
+    			Rectangle rect = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+    			Rectangle bot = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    			boolean inside = rect.intersects(bot);
+    			while(inside)
+    			{
+    				object.y++;
+    				object.x++;
+    				rect = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+    				bot = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    				inside = rect.intersects(bot);
+    			}
+    		}
+    		halfway=((Math.sqrt((Math.pow((x-object.x),2))+(Math.pow((y-object.y),2))))/2);
+    		object.Yknocked=(float) (object.y-halfway);
+    		object.Xknocked=(float) (object.x-halfway);
+    	}
+    	else if(direction.equals("upright"))
+    	{
+    		object.y+=-64;
+    		object.x+=64;
+    		for(Wall wally:walls)
+    		{
+    			Rectangle rect = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+    			Rectangle bot = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    			boolean inside = rect.intersects(bot);
+    			while(inside)
+    			{
+    				object.y++;
+    				object.x--;
+    				rect = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+    				bot = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    				inside = rect.intersects(bot);
+    			}
+    		}
+    		halfway=((Math.sqrt((Math.pow((x-object.x),2))+(Math.pow((y-object.y),2))))/2);
+    		object.Yknocked=(float) (object.y-halfway);
+    		object.Xknocked=(float) (object.x+halfway);
+    	}
+    	else if(direction.equals("downleft"))
+    	{
+    		object.y+=64;
+    		object.x+=-64;
+    		for(Wall wally:walls)
+    		{
+    			Rectangle rect = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+    			Rectangle bot = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    			boolean inside = rect.intersects(bot);
+    			while(inside)
+    			{
+    				object.y--;
+    				object.x++;
+    				rect = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+    				bot = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    				inside = rect.intersects(bot);
+    			}
+    		}
+    		halfway=((Math.sqrt((Math.pow((x-object.x),2))+(Math.pow((y-object.y),2))))/2);
+    		object.Yknocked=(float) (object.y+halfway);
+    		object.Xknocked=(float) (object.x-halfway);
+    	}
+    	else	//downright
+    	{
+    		object.y+=64;
+    		object.x+=64;
+    		for(Wall wally:walls)
+    		{
+    			Rectangle rect = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+    			Rectangle bot = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    			boolean inside = rect.intersects(bot);
+    			while(inside)
+    			{
+    				object.y--;
+    				object.x--;
+    				rect = new Rectangle(wally.x,wally.y,wally.image.getWidth(),wally.image.getHeight());
+    				bot = new Rectangle(object.x,object.y,object.image.getWidth(),object.image.getHeight());
+    				inside = rect.intersects(bot);
+    			}
+    		}
+    		halfway=((Math.sqrt((Math.pow((x-object.x),2))+(Math.pow((y-object.y),2))))/2);
+    		object.Yknocked=(float) (object.y+halfway);
+    		object.Xknocked=(float) (object.x+halfway);
+    	}
+    }
     public boolean meleeRange(Entity object, float range) 
     {
     	reach = new Circle(x + 32, y + 32, range);

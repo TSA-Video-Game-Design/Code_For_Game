@@ -105,7 +105,10 @@ public class Projectile extends Entity {
 				Rectangle playerbox = new Rectangle(player.x, player.y,
 						player.image.getWidth(), player.image.getHeight());
 				if ((playerbox.intersects(ball)) || (playerbox.contains(x, y))) {
-					player.hurt();
+					if((player.shieldOut)&&(Math.random()<(.2)))
+					{}
+					else
+						player.hurt();
 					canDamage = false;
 					image = new Image(
 							"res/Video Game Tiles - Pixel by Pixel/Blank.png");

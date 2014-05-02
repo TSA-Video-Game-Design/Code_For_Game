@@ -26,6 +26,9 @@ public abstract class Mob extends Entity {
 	public int directionrnd;
 	public boolean canMoveX;
 	public boolean canMoveY;
+	public boolean drawKnockedBack = false;
+	public float Xknocked;
+	public float Yknocked;
 	public Timer timer = new Timer();
 	public Timer subtimer = new Timer();
 	public Mob()
@@ -55,6 +58,12 @@ public abstract class Mob extends Entity {
 			Pickup agun = new Pickup(x+24,y+48);
 			agun.image= new Image("res/Video Game Tiles - Pixel by Pixel/Energy Saber.png");
 			pickups.add(agun);
+	}
+	public void dropShield(ArrayList<Pickup> pickups) throws SlickException
+	{
+		Pickup agun = new Pickup(x+24,y+48);
+		agun.image= new Image("res/Weapons/Shield.png");
+		pickups.add(agun);
 	}
 	public void ai(Player player, ArrayList<Projectile> projectiles, ArrayList<Wall> walls, ArrayList<Mob> mobs) throws SlickException
 	{

@@ -16,7 +16,7 @@ public class Meleebot extends Mob {
 		Sound attacksfx;
 	public Meleebot(float myx, float myy) throws SlickException 
 	{
-		hp = 70;
+		hp = 50;
 		maxhp=hp;
 		seePlayer = false;
 		direction = "down";
@@ -58,7 +58,7 @@ public class Meleebot extends Mob {
 		//animation code here
 		if (canSeePlayer(player,256))
 		{
-			Circle inner = new Circle(player.x,player.y,48);
+			Circle inner = new Circle(player.x+32,player.y+32,24);
 			Rectangle bot = new Rectangle(x,y,image.getWidth(),image.getHeight());
 			if(!(inner.intersects(bot)||inner.contains(bot.getX(),bot.getY())))
 			{
@@ -364,7 +364,10 @@ public class Meleebot extends Mob {
 				attacksfx.play();
 				if(attackTimer==8)
 				{
-					player.hurt();
+					if((player.shieldOut)&&(Math.random()<(.2)))
+					{}
+					else
+						player.hurt();
 					attackTimer=0;
 				}
 				else

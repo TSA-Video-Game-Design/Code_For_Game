@@ -17,7 +17,7 @@ public class Drone extends Mob{
 	int enabletimer;
 	public Drone(float myx, float myy) throws SlickException 
 	{
-		hp = 30;
+		hp = 60;
 		maxhp=hp;
 		image = new Image("res/Drone/Drone/Drone F.png");
 		direction = "down";
@@ -193,6 +193,10 @@ public class Drone extends Mob{
 			{
 				timer=0;
 				hp=0;
+				if((player.shieldOut)&&(Math.random()<(.25)))
+				{player.hurt();
+				player.hurt();}
+				else
 				player.hurt();
 				player.hurt();
 				player.hurt();
@@ -202,8 +206,6 @@ public class Drone extends Mob{
 			else
 			{
 				timer++;
-				System.out.println(timer);
-				//TODO graphic of charging up explosion
 			}
 		}
 		else
